@@ -46,39 +46,41 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  TextFormField InputField(String label, TextEditingController controller, FocusNode focus){
-    return TextFormField(
-      obscureText: false,
-      focusNode: focus,
-      style: const TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(
-            color: focus.hasFocus
-                ? const Color(0xff427664)
-                : const Color.fromRGBO(0, 0, 0, 60)),
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          borderSide: const BorderSide(color: Color(0xff979797)),
-        ),
-
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xff427664), width: 2)
-        ),
-      ),
-      controller: controller,
-    );
-  }
-
-  final signInLink = InkWell(
-    child: const Text('Уже есть аккаунт? Войдите в него!',
-        style: TextStyle(fontSize: 14, color: Color(0xff427664))),
-    onTap: () => {},
-  );
 
   @override
   Widget build(BuildContext context) {
+
+    TextFormField InputField(String label, TextEditingController controller, FocusNode focus){
+      return TextFormField(
+        obscureText: false,
+        focusNode: focus,
+        style: const TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(
+              color: focus.hasFocus
+                  ? const Color(0xff427664)
+                  : const Color.fromRGBO(0, 0, 0, 60)),
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            borderSide: const BorderSide(color: Color(0xff979797)),
+          ),
+
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xff427664), width: 2)
+          ),
+        ),
+        controller: controller,
+      );
+    }
+
+    final signInLink = InkWell(
+      child: const Text('Уже есть аккаунт? Войдите в него!',
+          style: TextStyle(fontSize: 14, color: Color(0xff427664))),
+      onTap: () => { Navigator.pushNamed(context, '/login') },
+    );
+
     return Scaffold(
       body: Center(
         child: Container(

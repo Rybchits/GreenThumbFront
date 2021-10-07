@@ -38,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
     final emailField = TextFormField(
       obscureText: false,
       focusNode: _emailFocusNode,
@@ -118,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
     final signUpLink = InkWell(
       child: const Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(fontSize: 14, color: Color(0xff427664))),
-      onTap: () => {},
+      onTap: () => { Navigator.pushNamed(context, '/registration') },
     );
 
 
