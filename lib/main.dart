@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:green_thumb_mobile/screens/login/login_page.dart';
 import 'package:green_thumb_mobile/screens/login/registration_page.dart';
 
@@ -13,16 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => const LoginPage(),
-        '/registration': (context) => const RegistrationPage(),
-      },
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        initialRoute: '/login',
+        routes: {
+          '/login': (context) => const LoginPage(),
+          '/registration': (context) => const RegistrationPage(),
+        },
+        theme: AppTheme.lightTheme
     );
   }
 }

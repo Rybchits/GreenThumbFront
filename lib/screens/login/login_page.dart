@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/app_theme.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -47,21 +48,19 @@ class _LoginPageState extends State<LoginPage> {
         labelText: 'Электронная почта',
         labelStyle: TextStyle(
             color: _emailFocusNode.hasFocus
-                ? const Color(0xff427664)
+                ? Theme.of(context).primaryColorDark
                 : const Color.fromRGBO(0, 0, 0, 60)),
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4.0),
           borderSide: const BorderSide(color: Color(0xff979797)),
         ),
-
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xff427664), width: 2)
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)
         ),
       ),
       controller: _emailController,
     );
-
 
     final passwordField = TextFormField(
       obscureText: !_passwordVisible,
@@ -71,17 +70,15 @@ class _LoginPageState extends State<LoginPage> {
         labelText: 'Пароль',
         labelStyle: TextStyle(
             color: _passwordFocusNode.hasFocus
-                ? const Color(0xff427664)
+                ? Theme.of(context).primaryColorDark
                 : const Color.fromRGBO(0, 0, 0, 60)),
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4.0),
           borderSide: const BorderSide(color: Color(0xff979797)),
         ),
-
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xff427664), width: 2)
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)
         ),
         suffixIcon: IconButton(
           icon: Icon(
@@ -98,11 +95,10 @@ class _LoginPageState extends State<LoginPage> {
       controller: _passwordController,
     );
 
-
     final loginButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(4.0),
-      color: const Color(0xff49B889),
+      color: Theme.of(context).primaryColorLight,
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -115,18 +111,20 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-
     final signUpLink = InkWell(
-      child: const Text('Нет аккаунта? Зарегистрируйтесь!',
-          style: TextStyle(fontSize: 14, color: Color(0xff427664))),
+      child: Text('Нет аккаунта? Зарегистрируйтесь!',
+          style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark)),
       onTap: () => { Navigator.pushNamed(context, '/registration') },
     );
-
 
     return Scaffold(
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
+          decoration:
+              const BoxDecoration(
+                  gradient: AppTheme.backgroundGradient
+              ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
