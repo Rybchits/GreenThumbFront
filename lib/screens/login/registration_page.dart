@@ -47,14 +47,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     // Function for create input field
-    TextFormField inputField(String label, TextEditingController controller, FocusNode focus){
+    TextFormField inputField(String label, TextEditingController controller,
+        FocusNode focus, bool isVisible) {
       return TextFormField(
-        obscureText: false,
+        obscureText: !isVisible,
         focusNode: focus,
         style: const TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
         decoration: InputDecoration(
@@ -68,7 +67,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
             borderRadius: BorderRadius.circular(4.0),
             borderSide: const BorderSide(color: Color(0xff979797)),
           ),
-
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)
           ),
@@ -76,6 +74,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
         controller: controller,
       );
     }
+
+    final registrationButton = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(4.0),
+      color: Theme.of(context).primaryColorLight,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        onPressed: () {
+          print(_passwordRepeatController.text);
+        },
+        child: const Text("РЕГИСТРАЦИЯ",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, color: Colors.white)),
+      ),
+    );
 
     final signInLink = InkWell(
       child: Text('Уже есть аккаунт? Войдите в него!',
@@ -95,21 +109,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                  child: inputField("ФИО", _fullNameController, _fullNameFocusNode),
+                  child: inputField("ФИО", _fullNameController,
+                      _fullNameFocusNode, true),
                   height: 56,
                   margin: const EdgeInsets.only(bottom: 18)),
               Container(
-                  child: inputField('Электронная почта', _emailController, _emailFocusNode),
+                  child: inputField('Электронная почта', _emailController,
+                      _emailFocusNode, true),
                   height: 56,
                   margin: const EdgeInsets.only(bottom: 18)),
               Container(
-                  child: inputField("Пароль", _passwordController, _passwordFocusNode),
+                  child: inputField("Пароль", _passwordController,
+                      _passwordFocusNode, false),
                   height: 56,
                   margin: const EdgeInsets.only(bottom: 18)),
               Container(
-                  child: inputField("Повторите пароль", _passwordRepeatController, _passwordRepeatFocusNode),
+                  child: inputField( "Повторите пароль", _passwordRepeatController,
+                      _passwordRepeatFocusNode, false),
                   height: 56,
-                  margin: const EdgeInsets.only(bottom: 18)),
+                  margin: const EdgeInsets.only(bottom: 25)),
+              Container(
+                child: registrationButton,
+                height: 36,
+                margin: const EdgeInsets.only(bottom: 28),
+              ),
               Container(
                 child: signInLink,
               )
