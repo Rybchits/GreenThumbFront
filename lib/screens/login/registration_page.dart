@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/components/title.dart';
 import '../../app_theme.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -101,13 +102,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-          decoration: const BoxDecoration(
-              gradient: AppTheme.backgroundGradient
-          ),
+          decoration:
+              const BoxDecoration(gradient: AppTheme.backgroundGradient),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Container(
+                  child: TitleLogo("medium"),
+                  margin: const EdgeInsets.only(bottom: 38)),
               Container(
                   child: inputField("ФИО", _fullNameController,
                       _fullNameFocusNode, true),

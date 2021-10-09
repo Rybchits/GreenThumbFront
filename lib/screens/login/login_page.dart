@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
+import 'package:green_thumb_mobile/components/title.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -129,6 +130,10 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Container(
+                child: TitleLogo("medium"),
+                  margin: const EdgeInsets.only(bottom: 28)
+              ),
               Container(
                   child: emailField,
                   height: 56,
