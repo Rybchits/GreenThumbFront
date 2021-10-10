@@ -103,9 +103,7 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () {
-          print(_passwordController.text);
-        },
+        onPressed: () => { Navigator.pushNamed(context, '/spaces') },
         child: const Text("ВОЙТИ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
