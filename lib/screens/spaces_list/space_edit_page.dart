@@ -172,48 +172,46 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
       appBar: AppBar(backgroundColor: AppTheme.lightTheme.primaryColorLight),
       body: Center(
           child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-        decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-        child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: Row(children: [
-                    const SizedBox(
-                      child: ImageFromGalleryEx(),
-                      height: 77,
-                      width: 93,
-                    ),
-                    Container(
-                        child: nameField,
-                        height: 77,
-                        width: 218,
-                        margin: const EdgeInsets.only(left: 16))
-                  ]),
-                  margin: const EdgeInsets.only(bottom: 16, top: 16),
-                ),
-                Container(
-                    child: notificationTimeField,
-                    height: 56,
-                    margin: const EdgeInsets.only(bottom: 16)),
-                Container(
-                    child: tagsField,
-                    height: 56,
-                    margin: const EdgeInsets.only(bottom: 16)),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                        child: createButton,
-                        height: 36,
-                        margin: const EdgeInsets.only(bottom: 50)),
-                  ),
-                )
-              ],
-            )),
-      )),
+              padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
+              decoration:
+                  const BoxDecoration(gradient: AppTheme.backgroundGradient),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Row(children: [
+                            const SizedBox(
+                              child: ImageFromGalleryEx(),
+                              height: 77,
+                              width: 93,
+                            ),
+                            Container(
+                                child: nameField,
+                                height: 77,
+                                width: 218,
+                                margin: const EdgeInsets.only(left: 16))
+                          ]),
+                          margin: const EdgeInsets.only(bottom: 16, top: 16),
+                        ),
+                        Container(
+                            child: notificationTimeField,
+                            height: 56,
+                            margin: const EdgeInsets.only(bottom: 16)),
+                        Container(
+                            child: tagsField,
+                            height: 56,
+                            margin: const EdgeInsets.only(bottom: 250)),
+                        Container(
+                            child: createButton,
+                            height: 36,
+                            margin: const EdgeInsets.only(bottom: 50)),
+                      ],
+                    )),
+              ))),
     );
   }
 }
