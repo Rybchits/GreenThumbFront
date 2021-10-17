@@ -16,6 +16,10 @@ class _SpacesListPageState extends State<SpacesListPage> {
   final _searchController = TextEditingController();
   int? spacesBelong = 0;
 
+  void _pushSaved() {
+    Navigator.pushNamed(context, '/space-form');
+  }
+
   @override
   Widget build(BuildContext context) {
     final comboboxSpacesBelong = InputDecorator(
@@ -119,7 +123,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
           child: FloatingActionButton(
             backgroundColor: Theme.of(context).primaryColorLight,
             child: const Icon(Icons.add),
-            onPressed: () => {},
+            onPressed: _pushSaved,
           ),
         )
     );

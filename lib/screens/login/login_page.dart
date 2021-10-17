@@ -117,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
