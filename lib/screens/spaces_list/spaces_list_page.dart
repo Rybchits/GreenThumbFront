@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/components/title.dart';
+import 'package:green_thumb_mobile/models/space_class.dart';
+import 'package:green_thumb_mobile/screens/spaces_list/space_component.dart';
 
 import '../../app_theme.dart';
 
@@ -12,7 +14,13 @@ class SpacesListPage extends StatefulWidget {
 }
 
 class _SpacesListPageState extends State<SpacesListPage> {
-  final List<String> users = <String>["Tom", "Alice", "Bob", "Sam", "Kate"];
+  final List<Space> spaces = <Space>[
+    Space(1, "Моя квартира", const TimeOfDay(hour: 8, minute: 0), "url", {'#ВолгГТУ'}),
+    Space(1, "Твоя квартира", const TimeOfDay(hour: 8, minute: 0), "url", {'#Home', '#YourFlat'}),
+    Space(1, "Наша квартира", const TimeOfDay(hour: 8, minute: 0), "url", {}),
+    Space(1, "Бабки квартира", const TimeOfDay(hour: 8, minute: 0), "url", {}),
+    Space(1, "Еще одна квартираааа", const TimeOfDay(hour: 8, minute: 0), "url", {})
+  ];
   final _searchController = TextEditingController();
   int? spacesBelong = 0;
 
@@ -95,20 +103,13 @@ class _SpacesListPageState extends State<SpacesListPage> {
                 ],
                 crossAxisAlignment: CrossAxisAlignment.end,
               ),
+              const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 20),
-                    itemCount: users.length,
+                    itemCount: spaces.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                          elevation: 5,
-                          margin: const EdgeInsets.only(bottom: 15),
-                          child: Row(
-                            children: <Widget>[
-                              Text(users[index],
-                                  style: const TextStyle(fontSize: 22))
-                            ],
-                          ));
+                      return SpaceCard(currentSpace: spaces[index]);
                     }),
               )
             ],
