@@ -99,6 +99,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
