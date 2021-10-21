@@ -69,8 +69,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
             borderSide: const BorderSide(color: Color(0xff979797)),
           ),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)
-          ),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColorDark, width: 2)),
         ),
         controller: controller,
       );
@@ -94,56 +94,65 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     final signInLink = InkWell(
       child: Text('Уже есть аккаунт? Войдите в него!',
-          style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => { Navigator.pushNamed(context, '/login') },
+          style: TextStyle(
+              fontSize: 14, color: Theme.of(context).primaryColorDark)),
+      onTap: () => {Navigator.pushNamed(context, '/login')},
     );
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-          decoration:
-              const BoxDecoration(gradient: AppTheme.backgroundGradient),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                  child: TitleLogo("medium"),
-                  margin: const EdgeInsets.only(bottom: 38)),
-              Container(
-                  child: inputField("ФИО", _fullNameController,
-                      _fullNameFocusNode, true),
-                  height: 56,
-                  margin: const EdgeInsets.only(bottom: 18)),
-              Container(
-                  child: inputField('Электронная почта', _emailController,
-                      _emailFocusNode, true),
-                  height: 56,
-                  margin: const EdgeInsets.only(bottom: 18)),
-              Container(
-                  child: inputField("Пароль", _passwordController,
-                      _passwordFocusNode, false),
-                  height: 56,
-                  margin: const EdgeInsets.only(bottom: 18)),
-              Container(
-                  child: inputField( "Повторите пароль", _passwordRepeatController,
-                      _passwordRepeatFocusNode, false),
-                  height: 56,
-                  margin: const EdgeInsets.only(bottom: 25)),
-              Container(
-                child: registrationButton,
-                height: 36,
-                margin: const EdgeInsets.only(bottom: 28),
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
+            decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+            child: Center(
+              child: SingleChildScrollView( physics: const ClampingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        child: TitleLogo("medium"),
+                        margin: const EdgeInsets.only(bottom: 38)),
+                    Container(
+                        child: inputField(
+                            "ФИО", _fullNameController, _fullNameFocusNode, true),
+                        height: 56,
+                        margin: const EdgeInsets.only(bottom: 18)),
+                    Container(
+                        child: inputField('Электронная почта', _emailController,
+                              _emailFocusNode, true),
+                        height: 56,
+                        margin: const EdgeInsets.only(bottom: 18)),
+                    Container(
+                        child: inputField("Пароль", _passwordController,
+                              _passwordFocusNode, false),
+                        height: 56,
+                        margin: const EdgeInsets.only(bottom: 18)),
+                    Container(
+                        child: inputField(
+                              "Повторите пароль",
+                              _passwordRepeatController,
+                              _passwordRepeatFocusNode,
+                              false),
+                        height: 56,
+                        margin: const EdgeInsets.only(bottom: 25)),
+                    Container(
+                      child: registrationButton,
+                      height: 36,
+                      margin: const EdgeInsets.only(bottom: 28),
+                    ),
+                    Container(
+                      child: signInLink,
+                    )
+                  ],
+                ),
               ),
-              Container(
-                child: signInLink,
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
+          )
+        )
     );
   }
 }

@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final emailField = TextFormField(
       obscureText: false,
       focusNode: _emailFocusNode,
@@ -57,8 +56,8 @@ class _LoginPageState extends State<LoginPage> {
           borderSide: const BorderSide(color: Color(0xff979797)),
         ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)
-        ),
+            borderSide: BorderSide(
+                color: Theme.of(context).primaryColorDark, width: 2)),
       ),
       controller: _emailController,
     );
@@ -79,8 +78,8 @@ class _LoginPageState extends State<LoginPage> {
           borderSide: const BorderSide(color: Color(0xff979797)),
         ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)
-        ),
+            borderSide: BorderSide(
+                color: Theme.of(context).primaryColorDark, width: 2)),
         suffixIcon: IconButton(
           icon: Icon(
             _passwordVisible ? Icons.visibility : Icons.visibility_off,
@@ -103,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => { Navigator.pushNamed(context, '/spaces') },
+        onPressed: () => {Navigator.pushNamed(context, '/spaces')},
         child: const Text("ВОЙТИ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -112,46 +111,47 @@ class _LoginPageState extends State<LoginPage> {
 
     final signUpLink = InkWell(
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
-          style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => { Navigator.pushNamed(context, '/registration') },
+          style: TextStyle(
+              fontSize: 14, color: Theme.of(context).primaryColorDark)),
+      onTap: () => {Navigator.pushNamed(context, '/registration')},
     );
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-          decoration:
-              const BoxDecoration(
-                  gradient: AppTheme.backgroundGradient
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
+              decoration:
+                  const BoxDecoration(gradient: AppTheme.backgroundGradient),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      child: TitleLogo("medium"),
+                      margin: const EdgeInsets.only(bottom: 28)),
+                  Container(
+                      child: emailField,
+                      height: 56,
+                      margin: const EdgeInsets.only(bottom: 16)),
+                  Container(
+                      child: passwordField,
+                      height: 56,
+                      margin: const EdgeInsets.only(bottom: 35)),
+                  Container(
+                      child: loginButton,
+                      height: 36,
+                      margin: const EdgeInsets.only(bottom: 28)),
+                  Container(
+                    child: signUpLink,
+                  )
+                ],
               ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                child: TitleLogo("medium"),
-                  margin: const EdgeInsets.only(bottom: 28)
-              ),
-              Container(
-                  child: emailField,
-                  height: 56,
-                  margin: const EdgeInsets.only(bottom: 16)),
-              Container(
-                  child: passwordField,
-                  height: 56,
-                  margin: const EdgeInsets.only(bottom: 35)),
-              Container(
-                  child: loginButton,
-                  height: 36,
-                  margin: const EdgeInsets.only(bottom: 28)),
-              Container(
-                child: signUpLink,
-              )
-            ],
+            ),
           ),
-        ),
-      ),
+        )
     );
   }
 }
