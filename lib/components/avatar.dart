@@ -13,7 +13,7 @@ class UserAvatar extends StatelessWidget {
         _radius = 28;
         break;
       case 'medium':
-        _radius = 64;
+        _radius = 58;
         break;
       default:
         _radius = 219;
@@ -24,8 +24,13 @@ class UserAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: _radius,
+      child: Icon(
+        Icons.person,
+        color: Colors.white,
+        size: _radius/1.5,
+      ),
       foregroundImage: NetworkImage(_urlImage),
-      backgroundImage: const AssetImage('assets/images/NoAvatarUser.jpg'),
+      backgroundColor: Theme.of(context).primaryColorLight,
     );
   }
 }

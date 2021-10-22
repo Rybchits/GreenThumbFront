@@ -89,11 +89,10 @@ class SpaceCard extends StatelessWidget {
                       children: <Widget>[
                         ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg",
-                              height: 75.0,
-                              width: 90.0,
-                            )),
+                            child: FadeInImage.assetNetwork(
+                                placeholder: "assets/images/VstuLogo.jpg",
+                                image: "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg")
+                        ),
                       ],
                     ),
                     flex: 6),
@@ -102,19 +101,3 @@ class SpaceCard extends StatelessWidget {
             )));
   }
 }
-
-/*
-child: Container(
-                      alignment: Alignment.center,
-                      margin:
-                          const EdgeInsets.only(right: 5),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Image.network(
-                          "https://api.interior.ru/media/images/setka/2020_11_05/Paunic_22.jpg",
-                          height: 75.0,
-                          width: 90.0,
-                        ),
-                      ),
-                    ),
- */
