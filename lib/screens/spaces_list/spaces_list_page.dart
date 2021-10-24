@@ -78,14 +78,17 @@ class _SpacesListPageState extends State<SpacesListPage> {
           elevation: 0,
           title: TitleLogo('small'),
           actions: [
-            Container(
-              height: 64,
-              width: 64,
-              margin: const EdgeInsets.only(right: 15),
-              child: UserAvatar(
+            GestureDetector(
+                child: Container(
+                  height: 64,
+                  width: 64,
+                  margin: const EdgeInsets.only(right: 15),
+                  child: UserAvatar(
                   'https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album',
                   'medium'),
-            )
+                ),
+              onTap:  () => {Navigator.pushNamed(context, '/user-profile')},
+            ),
           ],
           backgroundColor: const Color(0xfff7f7f7),
           automaticallyImplyLeading: false,
@@ -126,7 +129,6 @@ class _SpacesListPageState extends State<SpacesListPage> {
             child: const Icon(Icons.add),
             onPressed: _pushSaved,
           ),
-        )
-    );
+        ));
   }
 }

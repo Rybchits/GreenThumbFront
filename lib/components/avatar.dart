@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class UserAvatar extends StatelessWidget {
   double _radius = 219;
-  String _urlImage = '';
+  String? _urlImage = '';
 
-  UserAvatar(String urlImage, String size, {Key? key}) : super(key: key) {
+  UserAvatar(String? urlImage, String size, {Key? key}) : super(key: key) {
     _urlImage = urlImage;
 
     switch (size){
@@ -29,7 +29,7 @@ class UserAvatar extends StatelessWidget {
         color: Colors.white,
         size: _radius/1.5,
       ),
-      foregroundImage: NetworkImage(_urlImage),
+      foregroundImage: _urlImage == null? null : NetworkImage(_urlImage!),
       backgroundColor: Theme.of(context).primaryColorLight,
     );
   }

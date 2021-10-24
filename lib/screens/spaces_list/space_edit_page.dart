@@ -169,7 +169,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     );
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: AppTheme.lightTheme.primaryColorLight),
+      appBar: AppBar(backgroundColor: Theme.of(context).primaryColorLight),
       body: Center(
           child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
@@ -192,7 +192,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                             Container(
                                 child: nameField,
                                 height: 77,
-                                width: 218,
+                                width: 160,
                                 margin: const EdgeInsets.only(left: 16))
                           ]),
                           margin: const EdgeInsets.only(bottom: 16, top: 16),

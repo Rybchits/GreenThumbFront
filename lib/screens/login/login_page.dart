@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(
               fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => {Navigator.pushNamed(context, '/registration')},
+      onTap: () => Navigator.popAndPushNamed(context, '/spaces'),
     );
 
     return GestureDetector(
