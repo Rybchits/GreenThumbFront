@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:provider/provider.dart';
 
 
 import '../../app_theme.dart';
 
 class UserPage extends StatelessWidget {
-  final User currentUser;
 
-  const UserPage({Key? key, required this.currentUser}) : super(key: key);
+  const UserPage({Key? key}) : super(key: key);
+  
+  void _onLogoutButtonClick(BuildContext context){
+    Provider.of<UserStore>(context, listen: false).setUser(null);
+    Navigator.pushNamedAndRemoveUntil(context, '/login',
+            (Route<dynamic> route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
 
+    final User? currentUser = Provider.of<UserStore>(context).user;
+
     final emailForm = TextFormField(
       enabled: false,
-      initialValue: currentUser.email,
+      initialValue: currentUser?.email,
       style: const TextStyle(
         color: Color(0xff232536),
         fontSize: 18,
@@ -45,8 +53,7 @@ class UserPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/login',
-                    (Route<dynamic> route) => false),
+            onPressed: () => { _onLogoutButtonClick(context)}
           ),
         ],
       ),
@@ -60,11 +67,11 @@ class UserPage extends StatelessWidget {
                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 30),
-                          child: UserAvatar(currentUser.urlAvatar, 'large')),
+                          child: UserAvatar(currentUser?.urlAvatar, 'large')),
                   flex: 8,
                   ),
                   Expanded(
-                    child: Text(currentUser.name,
+                    child: Text(currentUser != null? currentUser.name! : "",
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 22)),

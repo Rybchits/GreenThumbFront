@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:green_thumb_mobile/components/title.dart';
+import 'package:green_thumb_mobile/models/user_class.dart';
+import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -19,8 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _passwordFocusNode.addListener(_onOnFocusNodeEvent);
-    _emailFocusNode.addListener(_onOnFocusNodeEvent);
+    _passwordFocusNode.addListener(_onFocusNodeEvent);
+    _emailFocusNode.addListener(_onFocusNodeEvent);
   }
 
   @override
@@ -32,14 +35,21 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  _onOnFocusNodeEvent() {
+  _onFocusNodeEvent() {
     setState(() {
       // Re-renders
     });
   }
 
+  _onLoginButtonClick(context) {
+    Provider.of<UserStore>(context, listen: false).setUser( User("Кузнецова Анна Игоревна", "19106239@vstu.ru",
+        "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"));
+    Navigator.pushNamed(context, '/spaces');
+  }
+
   @override
   Widget build(BuildContext context) {
+
     final emailField = TextFormField(
       obscureText: false,
       focusNode: _emailFocusNode,
@@ -102,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => {Navigator.pushNamed(context, '/spaces')},
+        onPressed: () => { _onLoginButtonClick(context) },
         child: const Text("ВОЙТИ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -113,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(
               fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => Navigator.popAndPushNamed(context, '/spaces'),
+      onTap: () => Navigator.popAndPushNamed(context, '/registration'),
     );
 
     return GestureDetector(
