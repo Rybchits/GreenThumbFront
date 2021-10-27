@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
 import 'package:green_thumb_mobile/stores/user_store.dart';
 import 'package:provider/provider.dart';
@@ -10,15 +11,16 @@ import '../../app_theme.dart';
 class UserPage extends StatelessWidget {
 
   const UserPage({Key? key}) : super(key: key);
-  
-  void _onLogoutButtonClick(BuildContext context){
-    Provider.of<UserStore>(context, listen: false).setUser(null);
-    Navigator.pushNamedAndRemoveUntil(context, '/login',
-            (Route<dynamic> route) => false);
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    void onLogoutButtonClick(){
+      Session.logout();
+      Provider.of<UserStore>(context, listen: false).setUser(null);
+      Navigator.pushNamedAndRemoveUntil(context, '/login',
+              (Route<dynamic> route) => false);
+    }
 
     final User? currentUser = Provider.of<UserStore>(context).user;
 
@@ -53,7 +55,7 @@ class UserPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => { _onLogoutButtonClick(context)}
+            onPressed: () => { onLogoutButtonClick()}
           ),
         ],
       ),

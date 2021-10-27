@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:green_thumb_mobile/components/title.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
 import 'package:green_thumb_mobile/stores/user_store.dart';
 import 'package:provider/provider.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -19,11 +22,23 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordFocusNode = FocusNode();
   bool _passwordVisible = false;
 
+  Future<void> checkAuth() async {
+    var res = await Session.post(Uri.parse('${Session.SERVER_IP}/testAuth'), null);
+    if(res.statusCode == 200){
+      print('authorized');
+      Navigator.pushNamed(context, '/spaces');
+    }
+    else{
+      print("not authorized. Code: ${res.statusCode} Headers: ${res.request?.headers}");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _passwordFocusNode.addListener(_onFocusNodeEvent);
     _emailFocusNode.addListener(_onFocusNodeEvent);
+    checkAuth();
   }
 
   @override
@@ -41,14 +56,34 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  _onLoginButtonClick(context) {
-    Provider.of<UserStore>(context, listen: false).setUser( User("Кузнецова Анна Игоревна", "19106239@vstu.ru",
-        "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"));
-    Navigator.pushNamed(context, '/spaces');
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    Future<int> attemptSignIn(String email, String password) async {
+      var res =
+      await Session.post(Uri.parse('${Session.SERVER_IP}/auth'),
+          jsonEncode(<String, String>{'email': email, 'password': password}));
+      return res.statusCode;
+    }
+
+    Future<void> onLoginButtonClick() async {
+      var email = _emailController.text;
+      var password = _passwordController.text;
+
+      var res = await attemptSignIn(email, password);
+
+      if (res == 200) {
+        print('authorized');
+
+        Provider.of<UserStore>(context, listen: false).setUser( User("Кузнецова Анна Игоревна", "19106239@vstu.ru",
+            "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"));
+
+        Navigator.pushNamed(context, '/spaces');
+      } else {
+        print('not authorized. Code: $res');
+      }
+    }
 
     final emailField = TextFormField(
       obscureText: false,
@@ -112,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => { _onLoginButtonClick(context) },
+        onPressed: onLoginButtonClick,
         child: const Text("ВОЙТИ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/screens/login/login_page.dart';
 import 'package:green_thumb_mobile/screens/login/registration_page.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/space_edit_page.dart';
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

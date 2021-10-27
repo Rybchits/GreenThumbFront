@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/title.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
+import 'package:http/http.dart' as http;
 import '../../app_theme.dart';
+
+
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -76,6 +82,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
     }
 
+    Future<int> attemptSignUp(
+        String name, String email, String password) async {
+      var res = await Session.post(Uri.parse('${Session.SERVER_IP}/register'),
+          jsonEncode(<String, String>{'name': name, 'email': email, 'password': password}));
+      return res.statusCode;
+    }
+
     final registrationButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(4.0),
@@ -83,8 +96,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () {
-          print(_passwordRepeatController.text);
+        onPressed: () async {
+          var username = _fullNameController.text;
+          var email = _emailController.text;
+          var password = _passwordController.text;
+
+          var res = await attemptSignUp(username, email, password);
+          if (res == 200){
+            print("The user was created. Log in now.");
+            Navigator.popAndPushNamed(context, '/login');
+          }
+          else if (res == 400)
+            print("Request parameters not valid");
+          else if (res == 460)
+            print("This email already exists");
+          else {
+            print("An unknown error occurred. code: $res");
+          }
         },
         child: const Text("РЕГИСТРАЦИЯ",
             textAlign: TextAlign.center,
@@ -102,57 +130,57 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-            decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-            child: Center(
-              child: SingleChildScrollView( physics: const ClampingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        child: TitleLogo("medium"),
-                        margin: const EdgeInsets.only(bottom: 38)),
-                    Container(
-                        child: inputField(
-                            "ФИО", _fullNameController, _fullNameFocusNode, true),
-                        height: 56,
-                        margin: const EdgeInsets.only(bottom: 18)),
-                    Container(
-                        child: inputField('Электронная почта', _emailController,
-                              _emailFocusNode, true),
-                        height: 56,
-                        margin: const EdgeInsets.only(bottom: 18)),
-                    Container(
-                        child: inputField("Пароль", _passwordController,
-                              _passwordFocusNode, false),
-                        height: 56,
-                        margin: const EdgeInsets.only(bottom: 18)),
-                    Container(
-                        child: inputField(
-                              "Повторите пароль",
-                              _passwordRepeatController,
-                              _passwordRepeatFocusNode,
-                              false),
-                        height: 56,
-                        margin: const EdgeInsets.only(bottom: 25)),
-                    Container(
-                      child: registrationButton,
-                      height: 36,
-                      margin: const EdgeInsets.only(bottom: 28),
-                    ),
-                    Container(
-                      child: signInLink,
-                    )
-                  ],
-                ),
+            body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
+          decoration:
+              const BoxDecoration(gradient: AppTheme.backgroundGradient),
+          child: Center(
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      child: TitleLogo("medium"),
+                      margin: const EdgeInsets.only(bottom: 38)),
+                  Container(
+                      child: inputField(
+                          "ФИО", _fullNameController, _fullNameFocusNode, true),
+                      height: 56,
+                      margin: const EdgeInsets.only(bottom: 18)),
+                  Container(
+                      child: inputField('Электронная почта', _emailController,
+                          _emailFocusNode, true),
+                      height: 56,
+                      margin: const EdgeInsets.only(bottom: 18)),
+                  Container(
+                      child: inputField("Пароль", _passwordController,
+                          _passwordFocusNode, false),
+                      height: 56,
+                      margin: const EdgeInsets.only(bottom: 18)),
+                  Container(
+                      child: inputField(
+                          "Повторите пароль",
+                          _passwordRepeatController,
+                          _passwordRepeatFocusNode,
+                          false),
+                      height: 56,
+                      margin: const EdgeInsets.only(bottom: 25)),
+                  Container(
+                    child: registrationButton,
+                    height: 36,
+                    margin: const EdgeInsets.only(bottom: 28),
+                  ),
+                  Container(
+                    child: signInLink,
+                  )
+                ],
               ),
             ),
-          )
-        )
-    );
+          ),
+        )));
   }
 }
