@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:green_thumb_mobile/components/title.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,11 +19,23 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordFocusNode = FocusNode();
   bool _passwordVisible = false;
 
+  Future<void> checkAuth() async {
+    var res = await Session.post(Uri.parse('${Session.SERVER_IP}/testAuth'), null);
+    if(res.statusCode == 200){
+      print('authorized');
+      Navigator.pushNamed(context, '/spaces');
+    }
+    else{
+      print("not authorized. Code: ${res.statusCode} Headers: ${res.request?.headers}");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _passwordFocusNode.addListener(_onOnFocusNodeEvent);
     _emailFocusNode.addListener(_onOnFocusNodeEvent);
+    checkAuth();
   }
 
   @override
@@ -38,8 +53,18 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    Future<int> attemptSignIn(String email, String password) async {
+      var res =
+      await Session.post(Uri.parse('${Session.SERVER_IP}/auth'),
+          jsonEncode(<String, String>{'email': email, 'password': password}));
+      return res.statusCode;
+    }
+
     final emailField = TextFormField(
       obscureText: false,
       focusNode: _emailFocusNode,
@@ -102,7 +127,19 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => {Navigator.pushNamed(context, '/spaces')},
+        onPressed: () async {
+          var email = _emailController.text;
+          var password = _passwordController.text;
+
+          var res = await attemptSignIn(email, password);
+
+          if (res == 200) {
+            print('authorized');
+            Navigator.popAndPushNamed(context, '/spaces');
+          } else {
+            print('not authorized. Code: $res');
+          }
+        },
         child: const Text("ВОЙТИ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -113,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(
               fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => Navigator.popAndPushNamed(context, '/spaces'),
+      onTap: () => Navigator.popAndPushNamed(context, '/registration'),
     );
 
     return GestureDetector(
@@ -151,7 +188,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 }
