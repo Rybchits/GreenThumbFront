@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'image_picker.dart';
 
@@ -16,13 +15,15 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   final _nameController = TextEditingController();
   final _notificationTimeFocusNode = FocusNode();
   final _nameFocusNode = FocusNode();
+  final _tagsFocusNode = FocusNode();
   var _selectedTime = const TimeOfDay(hour: 0, minute: 0);
 
   @override
   void initState() {
     super.initState();
-    _nameFocusNode.addListener(_onOnFocusNodeEvent);
-    _notificationTimeFocusNode.addListener(_onOnFocusNodeEvent);
+    _nameFocusNode.addListener(_onFocusNodeEvent);
+    _notificationTimeFocusNode.addListener(_onFocusNodeEvent);
+    _tagsFocusNode.addListener(_onFocusNodeEvent);
   }
 
   @override
@@ -31,10 +32,11 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     _nameController.dispose();
     _notificationTimeFocusNode.dispose();
     _nameFocusNode.dispose();
+    _tagsFocusNode.dispose();
     super.dispose();
   }
 
-  _onOnFocusNodeEvent() {
+  _onFocusNodeEvent() {
     setState(() {
       // Re-renders
     });
@@ -70,7 +72,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                 color: _notificationTimeFocusNode.hasFocus
                     ? Theme.of(context).primaryColorDark
                     : const Color.fromRGBO(0, 0, 0, 60)),
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 12.0, 12.0, 20.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4.0),
               borderSide: const BorderSide(color: Color(0xff979797)),
@@ -91,12 +93,11 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
       focusNode: _nameFocusNode,
       style: const TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
       decoration: InputDecoration(
-        labelText: 'Название пространства',
-        labelStyle: TextStyle(
+        hintText: 'Название пространства...',
+        hintStyle: TextStyle(
             color: _nameFocusNode.hasFocus
-                ? Theme.of(context).primaryColorDark
+                ? const Color(0xffA9B2AA)
                 : const Color.fromRGBO(0, 0, 0, 60)),
-        contentPadding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Color(0xffA9B2AA)),
         ),
@@ -106,13 +107,14 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
 
     final tagsField = ChipsInput(
       initialValue: const [],
+      focusNode: _tagsFocusNode,
       decoration: InputDecoration(
         labelText: "Теги пространства",
         labelStyle: TextStyle(
-            color: _nameFocusNode.hasFocus
+            color: _tagsFocusNode.hasFocus
                 ? Theme.of(context).primaryColorDark
                 : const Color.fromRGBO(0, 0, 0, 60)),
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
+        contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4.0),
           borderSide: const BorderSide(color: Color(0xff979797)),
@@ -161,57 +163,46 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => {Navigator.pushNamed(context, '/spaces')},
+        onPressed: () => { Navigator.pop(context) },
         child: const Text("СОЗДАТЬ ПРОСТРАНСТВО",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Theme.of(context).primaryColorLight),
-      body: Center(
-          child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-              decoration:
-                  const BoxDecoration(gradient: AppTheme.backgroundGradient),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          child: Row(children: [
-                            const SizedBox(
-                              child: ImageFromGalleryEx(),
-                              height: 77,
-                              width: 93,
-                            ),
-                            Container(
-                                child: nameField,
-                                height: 77,
-                                width: 160,
-                                margin: const EdgeInsets.only(left: 16))
-                          ]),
-                          margin: const EdgeInsets.only(bottom: 16, top: 16),
-                        ),
-                        Container(
-                            child: notificationTimeField,
-                            height: 56,
-                            margin: const EdgeInsets.only(bottom: 16)),
-                        Container(
-                            child: tagsField,
-                            height: 56,
-                            margin: const EdgeInsets.only(bottom: 250)),
-                        Container(
-                            child: createButton,
-                            height: 36,
-                            margin: const EdgeInsets.only(bottom: 50)),
-                      ],
-                    )),
-              ))),
-    );
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Container(
+            margin: const EdgeInsets.all(25),
+            padding: MediaQuery.of(context).viewInsets,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  height: 80,
+                  child: Row(children: [
+                    const Expanded(
+                      child: ImageFromGalleryEx(),
+                      flex: 6,
+                    ),
+                    const Expanded(child: SizedBox(), flex: 1),
+                    Expanded(child: nameField, flex: 11)
+                  ], crossAxisAlignment: CrossAxisAlignment.stretch,),
+                  margin: const EdgeInsets.only(bottom: 16),
+                ),
+                Container(
+                    child: notificationTimeField,
+                    height: 56,
+                    margin: const EdgeInsets.only(bottom: 16)),
+                Container(
+                    child: tagsField,
+                    height: 56,
+                    margin: const EdgeInsets.only(bottom: 16)),
+                Container(
+                    child: createButton,
+                    height: 36,
+                    margin: const EdgeInsets.only(bottom: 5)),
+              ],
+            )));
   }
 }

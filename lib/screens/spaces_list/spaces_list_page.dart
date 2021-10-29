@@ -3,6 +3,7 @@ import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/components/title.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/space_component.dart';
+import 'package:green_thumb_mobile/screens/spaces_list/space_edit_page.dart';
 
 import '../../app_theme.dart';
 
@@ -23,10 +24,6 @@ class _SpacesListPageState extends State<SpacesListPage> {
   ];
   final _searchController = TextEditingController();
   int? spacesBelong = 0;
-
-  void _pushSaved() {
-    Navigator.pushNamed(context, '/space-form');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +124,12 @@ class _SpacesListPageState extends State<SpacesListPage> {
           child: FloatingActionButton(
             backgroundColor: Theme.of(context).primaryColorLight,
             child: const Icon(Icons.add),
-            onPressed: _pushSaved,
+            onPressed: () {
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (_) => const SpaceEditPage());
+            },
           ),
         ));
   }

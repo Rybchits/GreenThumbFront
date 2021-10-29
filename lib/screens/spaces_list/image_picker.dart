@@ -25,56 +25,34 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 0,
-          ),
-          Center(
-            child: GestureDetector(
-              onTap: () async {
-                XFile image = await imagePicker.pickImage(
-                    source: ImageSource.gallery,
-                    imageQuality: 50,
-                    preferredCameraDevice: CameraDevice.front);
-                setState(() {
-                  _image = File(image.path);
-                });
-              },
-              child: Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                width: 93,
-                height: 77,
-                child: _image != null
-                    ? Container(
-
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Image.file(
-                          _image,
-                          width: 93,
-                          height: 77,
-                          fit: BoxFit.fitHeight,
-                        ))
-                    : Container(
-                        decoration: BoxDecoration(
-                            color: AppTheme.lightTheme.primaryColorLight,
-                            borderRadius: BorderRadius.circular(10)),
-                        width: 93,
-                        height: 77,
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 50,
-                        ),
-                      ),
+    return GestureDetector(
+      onTap: () async {
+        XFile image = await imagePicker.pickImage(
+            source: ImageSource.gallery,
+            imageQuality: 50,
+            preferredCameraDevice: CameraDevice.front);
+        setState(() {
+          _image = File(image.path);
+        });
+      },
+      child: _image != null
+          ? Container(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(5)),
+              child: Image.file(
+                _image,
+                fit: BoxFit.fitHeight,
+              ))
+          : Container(
+              decoration: BoxDecoration(
+                  color: AppTheme.lightTheme.primaryColorLight,
+                  borderRadius: BorderRadius.circular(5)),
+              child: const Icon(
+                Icons.image,
+                color: Colors.white,
+                size: 50,
               ),
             ),
-          )
-        ],
-      ),
     );
   }
 }
