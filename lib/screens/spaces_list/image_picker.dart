@@ -1,13 +1,17 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageFromGalleryEx extends StatefulWidget {
-  const ImageFromGalleryEx({Key? key}) : super(key: key);
+  const ImageFromGalleryEx({Key? key, required this.setImage}) : super(key: key);
+
+  final Function(File) setImage;
 
   @override
-  ImageFromGalleryExState createState() => ImageFromGalleryExState();
+  ImageFromGalleryExState createState() => ImageFromGalleryExState(setImage);
 }
 
 class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
@@ -15,7 +19,9 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
   var imagePicker;
   var type;
 
-  ImageFromGalleryExState();
+  ImageFromGalleryExState(this.setImage);
+
+  final Function(File) setImage;
 
   @override
   void initState() {
@@ -28,12 +34,13 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
     return GestureDetector(
       onTap: () async {
         XFile image = await imagePicker.pickImage(
-            source: ImageSource.gallery,
-            imageQuality: 50,
-            preferredCameraDevice: CameraDevice.front);
+            source: ImageSource.gallery);
+        File file = File(image.path);
+
         setState(() {
-          _image = File(image.path);
+          _image = file;
         });
+        setImage(file);
       },
       child: _image != null
           ? Container(

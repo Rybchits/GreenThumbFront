@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 import 'image_picker.dart';
+import 'dart:io';
 
 class SpaceEditPage extends StatefulWidget {
   const SpaceEditPage({Key? key}) : super(key: key);
@@ -17,6 +21,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   final _nameFocusNode = FocusNode();
   final _tagsFocusNode = FocusNode();
   var _selectedTime = const TimeOfDay(hour: 0, minute: 0);
+  File? _image;
 
   @override
   void initState() {
@@ -57,6 +62,39 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    Future<int> createSpace(String name, String image) async {
+      var res =
+      await Session.post(Uri.parse('${Session.SERVER_IP}/createSpace?spaceName=$name'),
+          jsonEncode(<String, String>{'image': image }));
+      return res.statusCode;
+    }
+
+    Future<void> onCreateButtonClick() async {
+      var name = _nameController.text;
+      String img64 = "";
+      if(_image != null){
+        final bytes = _image!.readAsBytesSync();
+        img64 = base64Encode(bytes);
+      }
+
+      var res = await createSpace(name, img64);
+
+      if (res == 200) {
+        print('created');
+
+        Navigator.pop(context);
+      } else {
+        print('error. Code: $res');
+      }
+    }
+
+    void setImage(File file) {
+      setState(() {
+        _image = file;
+      });
+    }
+
     final notificationTimeField = InkWell(
         onTap: () {
           _selectTime(context);
@@ -163,7 +201,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => { Navigator.pop(context) },
+        onPressed: onCreateButtonClick,
         child: const Text("СОЗДАТЬ ПРОСТРАНСТВО",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -181,8 +219,8 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                 Container(
                   height: 80,
                   child: Row(children: [
-                    const Expanded(
-                      child: ImageFromGalleryEx(),
+                    Expanded(
+                      child: ImageFromGalleryEx(setImage: setImage),
                       flex: 6,
                     ),
                     const Expanded(child: SizedBox(), flex: 1),
