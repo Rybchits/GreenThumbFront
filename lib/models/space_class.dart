@@ -1,23 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/models/plant_class.dart';
+import 'package:green_thumb_mobile/models/user_class.dart';
 
-class Space {
-  String _name = "";
-  TimeOfDay _timeOfNotification = const TimeOfDay(hour: 8, minute: 0);
-  String _imageUrl = "";
+abstract class Space {
   int _idCreator = 0;
-  Set<String> _tags;
-  int numberPlants = 0;
-
-  Space(this._idCreator, this._name, this._timeOfNotification, this._imageUrl, this._tags);
+  String _name = "";
+  String? _imageUrl = "";
 
   String get name => _name;
-  TimeOfDay get timeOfNotification => _timeOfNotification;
-  String get imageUrl => _imageUrl;
+  String? get imageUrl => _imageUrl;
   int get idCreator => _idCreator;
-  Set<String> get tags => _tags;
+}
 
-  Space changeName(String newName){
-    return Space(_idCreator, newName, _timeOfNotification, _imageUrl, _tags);
+
+class SpaceCardInfo extends Space {
+  List<String> _tags = [];
+  int _numberPlants = 0;
+
+  SpaceCardInfo(String name) {
+    _name = name;
   }
 
+  SpaceCardInfo.fullConstructor(int idCreator, String name, String? imageUrl,
+      this._tags, this._numberPlants) {
+    _idCreator = idCreator;
+    _name = name;
+    _imageUrl = imageUrl;
+  }
+
+  List<String> get tags => _tags;
+  int get numberPlants => _numberPlants;
+}
+
+
+class SpaceCardContent extends Space {
+  TimeOfDay _notificationTime = TimeOfDay(hour: 8, minute: 0);
+  List<Plant> _plants = [];
+  List<User> _users = [];
+  bool _notificationOn = false;
+
+  SpaceCardContent(String name) {
+    _name = name;
+  }
+
+  SpaceCardContent.fullConstructor(int idCreator, String name, String? imageUrl,
+      this._notificationTime, this._plants, this._users, this._notificationOn) {
+    _idCreator = idCreator;
+    _name = name;
+    _imageUrl = imageUrl;
+  }
+
+  TimeOfDay get notificationTime => _notificationTime;
+  List<Plant> get plants => _plants;
+  List<User> get users => _users;
+  bool get notificationOn => _notificationOn;
+
+  set notificationOn(bool value) => _notificationOn = value;
 }

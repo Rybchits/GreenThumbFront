@@ -15,12 +15,13 @@ class SpacesListPage extends StatefulWidget {
 }
 
 class _SpacesListPageState extends State<SpacesListPage> {
-  final List<Space> spaces = <Space>[
-    Space(1, "Моя квартира", const TimeOfDay(hour: 8, minute: 0), "url", {'#ВолгГТУ'}),
-    Space(1, "Твоя квартира", const TimeOfDay(hour: 8, minute: 0), "url", {'#Home', '#YourFlat'}),
-    Space(1, "Наша квартира", const TimeOfDay(hour: 8, minute: 0), "url", {}),
-    Space(1, "Бабки квартира", const TimeOfDay(hour: 8, minute: 0), "url", {}),
-    Space(1, "Еще одна квартираааа", const TimeOfDay(hour: 8, minute: 0), "url", {})
+  final List<SpaceCardInfo> spaces = <SpaceCardInfo>[
+    SpaceCardInfo.fullConstructor(1, "Моя квартира", "url", ['#ВолгГТУ'], 2),
+    SpaceCardInfo.fullConstructor(
+        1, "Твоя квартира", "url", ['#Home', '#YourFlat'], 4),
+    SpaceCardInfo.fullConstructor(1, "Наша квартира", "url", [], 999),
+    SpaceCardInfo.fullConstructor(1, "Бабки квартира", "url", [], 0),
+    SpaceCardInfo.fullConstructor(1, "Еще одна квартираааа", "url", [], 0)
   ];
   final _searchController = TextEditingController();
   int? spacesBelong = 0;
@@ -113,7 +114,9 @@ class _SpacesListPageState extends State<SpacesListPage> {
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     itemCount: spaces.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return SpaceCard(currentSpace: spaces[index]);
+                      return GestureDetector(
+                          onTap: () => {Navigator.pushNamed(context, '/space')},
+                          child: SpaceCard(currentSpace: spaces[index]));
                     }),
               )
             ],

@@ -8,6 +8,7 @@ class User {
 
     User(this._name, this._email, this._urlAvatar);
 
+    int get id => _id;
     String? get name => _name;
     String? get email => _email;
     String? get urlAvatar => _urlAvatar;

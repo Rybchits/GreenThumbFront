@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
 
-enum UserActions { login, logout}
-
 class UserStore extends ChangeNotifier {
   User? _user;
 

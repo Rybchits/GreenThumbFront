@@ -5,13 +5,13 @@ import 'package:green_thumb_mobile/models/space_class.dart';
 import '../../app_theme.dart';
 
 class SpaceCard extends StatelessWidget {
-  final Space currentSpace;
+  final SpaceCardInfo currentSpace;
 
   const SpaceCard({Key? key, required this.currentSpace}) : super(key: key);
 
   Widget _buildChip(String label) {
     return Chip(
-      labelPadding: const EdgeInsets.symmetric(horizontal: 1, vertical: 0),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       label: Text(
         label,
         style: const TextStyle(color: AppTheme.chipsColor, fontSize: 12),
@@ -30,9 +30,12 @@ class SpaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 120,
+        height: 135,
         child: Card(
-            elevation: 6,
+            shape: BeveledRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            elevation: 4,
             margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: <Widget>[
@@ -79,25 +82,43 @@ class SpaceCard extends StatelessWidget {
                                           runSpacing: 6.0,
                                           children: currentSpace.tags
                                               .map((e) => _buildChip(e))
-                                              .toList()))
+                                              .toList())),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: currentSpace.numberPlants == 0
+                                      ? const Text("Растения не указаны...")
+                                      : Row(children: <Widget>[
+                                          Text(
+                                              "Число растений: ${currentSpace.numberPlants}"),
+                                          const SizedBox(width: 5),
+                                          const Image(
+                                            image: AssetImage(
+                                                'assets/images/Leafs.jpg'),
+                                            width: 18,
+                                            height: 18,
+                                          )
+                                        ]))
                             ])),
                     flex: 14),
                 Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
                             child: FadeInImage.assetNetwork(
                                 placeholder: "assets/images/VstuLogo.jpg",
-                                image: "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg")
-                        ),
+                                image:
+                                    "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg")),
                       ],
                     ),
                     flex: 6),
                 const Expanded(child: SizedBox(), flex: 1),
               ],
-            )));
+            )
+        )
+    );
   }
 }
