@@ -17,9 +17,9 @@ class AppTheme {
   );
 
   static final lightTheme = ThemeData(
+      primaryColor: const Color(0xff43B05C),
       primaryColorLight: const Color(0xff49B889),
-      primaryColorDark: const Color(0xff427664)
-  );
+      primaryColorDark: const Color(0xff427664));
 
   static const chipsColor = Color(0xffEA8F3D);
   static const chipsBackgroundColor = Color(0xffFFF3E5);

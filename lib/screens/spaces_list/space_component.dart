@@ -101,20 +101,17 @@ class SpaceCard extends StatelessWidget {
                             ])),
                     flex: 14),
                 Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: FadeInImage.assetNetwork(
-                                placeholder: "assets/images/VstuLogo.jpg",
-                                image:
-                                    "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg")),
-                      ],
-                    ),
-                    flex: 6),
+                  child: Container(
+                      padding: const EdgeInsets.all(2),
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: FadeInImage.assetNetwork(
+                              placeholder: "assets/images/VstuLogo.jpg",
+                              image: "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg"))
+                  ),
+                  flex: 8,
+                ),
                 const Expanded(child: SizedBox(), flex: 1),
               ],
             )

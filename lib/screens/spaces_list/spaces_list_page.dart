@@ -125,7 +125,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 40.0, right: 5),
           child: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColorLight,
+            backgroundColor: Theme.of(context).primaryColor,
             child: const Icon(Icons.add),
             onPressed: () {
               showModalBottomSheet(
