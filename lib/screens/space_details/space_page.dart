@@ -7,6 +7,7 @@ import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/models/plant_class.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
+import 'package:green_thumb_mobile/screens/space_details/plant_edit_page.dart';
 import 'package:green_thumb_mobile/screens/space_details/plant_component.dart';
 import 'package:green_thumb_mobile/stores/user_store.dart';
 import 'package:provider/provider.dart';
@@ -220,7 +221,20 @@ class _SpacePageState extends State<SpacePage> {
                           }),
                       flex: 5)
                 ]),
-          )
+          ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 40.0, right: 5),
+            child: FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              child: const Icon(Icons.add),
+              onPressed: () {
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (_) => const PlantAddPage());
+              },
+            ),
+          ),
         ));
   }
 }
