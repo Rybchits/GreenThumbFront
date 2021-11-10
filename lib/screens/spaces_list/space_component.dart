@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
+import 'package:green_thumb_mobile/models/user_class.dart';
+import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
 
@@ -29,6 +32,9 @@ class SpaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final User? currentUser = Provider.of<UserStore>(context).user;
+
     return Container(
         height: 135,
         child: Card(
@@ -59,9 +65,7 @@ class SpaceCard extends StatelessWidget {
                                           fontWeight: FontWeight.w600)),
                                   const SizedBox(width: 10),
                                   SizedBox(
-                                    child: UserAvatar(
-                                        'https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album',
-                                        'small'),
+                                    child: UserAvatar(currentUser!.urlAvatar, 'small'),
                                     height: 28,
                                     width: 28,
                                   )

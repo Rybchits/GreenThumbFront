@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/components/title.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
+import 'package:green_thumb_mobile/models/user_class.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/space_component.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/space_edit_page.dart';
+import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
 
@@ -28,6 +31,9 @@ class _SpacesListPageState extends State<SpacesListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final User? currentUser = Provider.of<UserStore>(context).user;
+
     final comboboxSpacesBelong = InputDecorator(
       decoration: InputDecoration(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
@@ -81,9 +87,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
                   height: 64,
                   width: 64,
                   margin: const EdgeInsets.only(right: 15),
-                  child: UserAvatar(
-                  'https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album',
-                  'medium'),
+                  child: UserAvatar(currentUser!.urlAvatar, 'medium'),
                 ),
               onTap:  () => {Navigator.pushNamed(context, '/user-profile')},
             ),

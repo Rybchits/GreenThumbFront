@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/image_picker.dart';
@@ -14,6 +15,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
   final _groupPlantController = TextEditingController();
   final _nameFocusNode = FocusNode();
   final _groupFocusNode = FocusNode();
+  File? _imagePlant;
 
   @override
   void initState() {
@@ -84,6 +86,11 @@ class _PlantAddPageState extends State<PlantAddPage> {
       ),
     );
 
+    void setImage(File file) {
+      setState(() {
+        _imagePlant = file;
+      });
+    }
 
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -96,8 +103,8 @@ class _PlantAddPageState extends State<PlantAddPage> {
                 Container(
                   height: 80,
                   child: Row(children: [
-                    const Expanded(
-                      child: ImageFromGalleryEx(),
+                    Expanded(
+                      child: ImageFromGalleryEx(setImage: setImage),
                       flex: 6,
                     ),
                     const Expanded(child: SizedBox(), flex: 1),
