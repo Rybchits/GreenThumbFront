@@ -6,6 +6,7 @@ import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
 import 'image_picker.dart';
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 class SpaceEditPage extends StatefulWidget {
   const SpaceEditPage({Key? key}) : super(key: key);
@@ -63,23 +64,31 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   @override
   Widget build(BuildContext context) {
 
-    Future<int> createSpace(String name, String image) async {
+    Future<int> createSpace(String name, String time, String image64, String ex) async {
       var res =
       await Session.post(Uri.parse('${Session.SERVER_IP}/createSpace?spaceName=$name'),
-          jsonEncode(<String, String>{'image': image }));
+          jsonEncode({'spaceName': name, 'notificationTime' : time, 'image': {'data': image64, 'extension': ex} }));
       return res.statusCode;
+    }
+
+    String formatTimeOfDay(TimeOfDay tod) {
+      final now = new DateTime.now();
+      final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
+      return dt.toIso8601String();
     }
 
     Future<void> onCreateButtonClick() async {
       var name = _nameController.text;
+      var time = formatTimeOfDay(_selectedTime);
       String img64 = "";
+      var ex = p.extension(_image?.path ?? "");
       if(_image != null){
         final bytes = _image!.readAsBytesSync();
         img64 = base64Encode(bytes);
       }
 
-      var res = await createSpace(name, img64);
-
+      var res = await createSpace(name, time, img64, ex);
+      print(time);
       if (res == 200) {
         print('created');
 

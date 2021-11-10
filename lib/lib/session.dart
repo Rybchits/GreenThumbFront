@@ -31,7 +31,7 @@ class Session {
     if(!initialized){
       await _initialize();
     }
-
+    
     http.Response response = await http.post(url, body: data, headers: headers);
     updateCookie(response);
     return response;
