@@ -11,6 +11,8 @@ import 'package:green_thumb_mobile/screens/space_details/plant_component.dart';
 import 'package:green_thumb_mobile/stores/user_store.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_theme.dart';
+
 class SpacePage extends StatefulWidget {
   const SpacePage({Key? key}) : super(key: key);
 
@@ -116,106 +118,109 @@ class _SpacePageState extends State<SpacePage> {
                 ])
               ],
           ),
-          body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                FadeInImage.assetNetwork(
-                  placeholder: "assets/images/VstuLogo.jpg",
-                  image: space.imageUrl == null ? "" : space.imageUrl!,
-                ),
-                const Padding(
-                    padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                    child: Text("Участники",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500))),
-                Expanded(
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                            width: 48.0 * space.users.length,
-                            child: ListView.builder(
-                                padding: const EdgeInsets.only(left: 10),
-                                itemCount: space.users.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                      width: 40.0,
-                                      height: 40.0,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 2, vertical: 0),
-                                      child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: UserAvatar(
-                                              space.users[index].urlAvatar,
-                                              "small")));
-                                })),
-                        if (isAuthorSpace)
-                          Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            child: RawMaterialButton(
-                              onPressed: () {},
-                              elevation: 2.0,
-                              fillColor: Colors.white,
-                              child: const Icon(Icons.add,
-                                  color: Color.fromRGBO(0, 0, 0, 0.2),
-                                  size: 30.0),
-                              shape: const CircleBorder(
-                                  side: BorderSide(
-                                      color: Color.fromRGBO(0, 0, 0, 0.2))),
-                            ),
-                            height: 40,
-                            width: 40,
-                          ),
-                        IconButton(
-                            icon: Icon(
-                                space.notificationOn ? Icons.notifications_active_sharp
-                                    : Icons.notifications_none,
-                                size: 35),
-                            onPressed: () {
-                              setState(() {
-                                space.notificationOn = !space.notificationOn;
-                              });
-                            })
-                      ]),
-                  flex: 1,
-                ),
-                Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
+          body: Container(
+            decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  FadeInImage.assetNetwork(
+                    placeholder: "assets/images/BigVstuLogo.jpg",
+                    image: space.imageUrl == null ? "" : space.imageUrl!,
+                  ),
+                  const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
+                      child: Text("Участники",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500))),
+                  Expanded(
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Expanded(child: searchField, flex: 8),
-                          const Expanded(child: SizedBox(), flex: 1),
-                          Expanded(child: waterButton, flex: 4)
-                        ],
+                          SizedBox(
+                              width: 48.0 * space.users.length,
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  itemCount: space.users.length,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                        width: 40.0,
+                                        height: 40.0,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2, vertical: 0),
+                                        child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: UserAvatar(
+                                                space.users[index].urlAvatar,
+                                                "small")));
+                                  })),
+                          if (isAuthorSpace)
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              child: RawMaterialButton(
+                                onPressed: () {},
+                                elevation: 2.0,
+                                fillColor: Colors.white,
+                                child: const Icon(Icons.add,
+                                    color: Color.fromRGBO(0, 0, 0, 0.2),
+                                    size: 30.0),
+                                shape: const CircleBorder(
+                                    side: BorderSide(
+                                        color: Color.fromRGBO(0, 0, 0, 0.2))),
+                              ),
+                              height: 40,
+                              width: 40,
+                            ),
+                          IconButton(
+                              icon: Icon(
+                                  space.notificationOn ? Icons.notifications_active_sharp
+                                      : Icons.notifications_none,
+                                  size: 35),
+                              onPressed: () {
+                                setState(() {
+                                  space.notificationOn = !space.notificationOn;
+                                });
+                              })
+                        ]),
+                    flex: 1,
+                  ),
+                  Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(child: searchField, flex: 8),
+                            const Expanded(child: SizedBox(), flex: 1),
+                            Expanded(child: waterButton, flex: 4)
+                          ],
+                        ),
                       ),
-                    ),
-                    flex: 1),
-                Expanded(
-                    child: ListView.builder(
-                        padding: const EdgeInsets.all(15),
-                        itemCount: space.plants.length,
-                        itemBuilder: (context, index) {
-                          void selectPlant(int index, bool? newValue) {
-                            setState(() {
-                              if (newValue == true) {
-                                _idsSelectedPlants.add(index);
-                              } else if (newValue == false) {
-                                _idsSelectedPlants.remove(index);
-                              }
-                            });
-                          }
+                      flex: 1),
+                  Expanded(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.all(15),
+                          itemCount: space.plants.length,
+                          itemBuilder: (context, index) {
+                            void selectPlant(int index, bool? newValue) {
+                              setState(() {
+                                if (newValue == true) {
+                                  _idsSelectedPlants.add(index);
+                                } else if (newValue == false) {
+                                  _idsSelectedPlants.remove(index);
+                                }
+                              });
+                            }
 
-                          return PlantCard(
-                              currentPlant: space.plants[index],
-                              isSelected: _idsSelectedPlants
-                                  .contains(space.plants[index].id),
-                              setIsSelectThisPlant: selectPlant);
-                        }),
-                    flex: 5)
-              ]),
+                            return PlantCard(
+                                currentPlant: space.plants[index],
+                                isSelected: _idsSelectedPlants
+                                    .contains(space.plants[index].id),
+                                setIsSelectThisPlant: selectPlant);
+                          }),
+                      flex: 5)
+                ]),
+          )
         ));
   }
 }

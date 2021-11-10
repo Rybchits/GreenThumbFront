@@ -18,7 +18,7 @@ class PlantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 135,
+        height: 115,
         child: Card(
           shape: BeveledRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
@@ -71,7 +71,7 @@ class PlantCard extends StatelessWidget {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: FadeInImage.assetNetwork(
-                            placeholder: "assets/images/VstuLogo.jpg",
+                            placeholder: "assets/images/PlantDefault.png",
                             image: currentPlant.urlImage))),
                 flex: 7,
               )
