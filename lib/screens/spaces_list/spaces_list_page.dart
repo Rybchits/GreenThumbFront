@@ -18,6 +18,7 @@ class SpacesListPage extends StatefulWidget {
 }
 
 class _SpacesListPageState extends State<SpacesListPage> {
+  
   final List<SpaceCardInfo> spaces = <SpaceCardInfo>[
     SpaceCardInfo.fullConstructor(1, "Моя квартира", "url", ['#ВолгГТУ'], 2),
     SpaceCardInfo.fullConstructor(
@@ -27,12 +28,29 @@ class _SpacesListPageState extends State<SpacesListPage> {
     SpaceCardInfo.fullConstructor(1, "Еще одна квартираааа", "url", [], 0)
   ];
   final _searchController = TextEditingController();
-  int? spacesBelong = 0;
+  int spacesBelong = 0;
+  
+  @override
+  void initState() {
+    _searchController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
 
     final User? currentUser = Provider.of<UserStore>(context).user;
+
+    List<SpaceCardInfo> searchedSpaces = spaces.where((element) =>
+        element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
     final comboboxSpacesBelong = InputDecorator(
       decoration: InputDecoration(
@@ -49,8 +67,9 @@ class _SpacesListPageState extends State<SpacesListPage> {
             DropdownMenuItem(child: Text("Личные"), value: 1),
           ],
           onChanged: (newValue) {
+            newValue = newValue ?? 0;
             setState(() {
-              spacesBelong = newValue;
+              spacesBelong = newValue!;
             });
           },
         ),
@@ -116,11 +135,11 @@ class _SpacesListPageState extends State<SpacesListPage> {
               Expanded(
                 child: ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 20),
-                    itemCount: spaces.length,
+                    itemCount: searchedSpaces.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                           onTap: () => {Navigator.pushNamed(context, '/space')},
-                          child: SpaceCard(currentSpace: spaces[index]));
+                          child: SpaceCard(currentSpace: searchedSpaces[index]));
                     }),
               )
             ],

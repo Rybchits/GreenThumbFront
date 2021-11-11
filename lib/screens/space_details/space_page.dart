@@ -47,6 +47,9 @@ class _SpacePageState extends State<SpacePage> {
 
   @override
   void initState() {
+    _searchController.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -59,6 +62,9 @@ class _SpacePageState extends State<SpacePage> {
   @override
   Widget build(BuildContext context) {
     bool isAuthorSpace = space.idCreator == Provider.of<UserStore>(context).user.id;
+
+    List<Plant> searchedPlants = space.plants.where((element) =>
+        element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
     final searchField = TextFormField(
       controller: _searchController,
@@ -201,7 +207,7 @@ class _SpacePageState extends State<SpacePage> {
                   Expanded(
                       child: ListView.builder(
                           padding: const EdgeInsets.all(15),
-                          itemCount: space.plants.length,
+                          itemCount: searchedPlants.length,
                           itemBuilder: (context, index) {
                             void selectPlant(int index, bool? newValue) {
                               setState(() {
@@ -214,9 +220,9 @@ class _SpacePageState extends State<SpacePage> {
                             }
 
                             return PlantCard(
-                                currentPlant: space.plants[index],
+                                currentPlant: searchedPlants[index],
                                 isSelected: _idsSelectedPlants
-                                    .contains(space.plants[index].id),
+                                    .contains(searchedPlants[index].id),
                                 setIsSelectThisPlant: selectPlant);
                           }),
                       flex: 5)
