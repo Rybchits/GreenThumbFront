@@ -26,6 +26,10 @@ class _LoginPageState extends State<LoginPage> {
     var res = await Session.post(Uri.parse('${Session.SERVER_IP}/testAuth'), null);
     if(res.statusCode == 200){
       print('authorized');
+
+      Provider.of<UserStore>(context, listen: false).setUser( User("Кузнецова Анна Игоревна", "19106239@vstu.ru",
+          "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"));
+
       Navigator.pushNamed(context, '/spaces');
     }
     else{

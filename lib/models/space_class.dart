@@ -3,6 +3,7 @@ import 'package:green_thumb_mobile/models/plant_class.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
 
 abstract class Space {
+  int _idSpace = 0;
   int _idCreator = 0;
   String _name = "";
   String? _imageUrl = "";
@@ -10,6 +11,7 @@ abstract class Space {
   String get name => _name;
   String? get imageUrl => _imageUrl;
   int get idCreator => _idCreator;
+  int get id => _idSpace;
 }
 
 

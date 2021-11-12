@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -27,11 +25,11 @@ class _SpacePageState extends State<SpacePage> {
       "Наша квартира",
       "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg",
       const TimeOfDay(hour: 8, minute: 0),
-      [ Plant.fullConstructor( 1, "Мой любимый кактус", "Кактусы", DateTime(1999, 12),
+      [ Plant.fullConstructor( 1, "Мой любимый кактус", "Кактусы", 1, DateTime(1999, 12),
             "https://picsy.ru/images/photos/375/2/gigantskij-kaktus-saguaro-32581489.jpg"),
-        Plant.fullConstructor(2, "MoneyPlant", "", DateTime(1999, 12, 2),
+        Plant.fullConstructor(2, "MoneyPlant", "", 1, DateTime(1999, 12, 2),
             "https://pocvetam.ru/wp-content/uploads/2019/08/1.-tolstjanka.jpg"),
-        Plant.fullConstructor( 3, "Фиалка новая кайфовая", "ууууу фиалки это круто",
+        Plant.fullConstructor( 3, "Фиалка новая кайфовая", "ууууу фиалки это круто", 1,
             DateTime(1999, 12, 1), "https://rastenievod.com/wp-content/uploads/2017/05/1-24-700x658.jpg")
       ],
       [
@@ -47,6 +45,9 @@ class _SpacePageState extends State<SpacePage> {
 
   @override
   void initState() {
+    _searchController.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -59,6 +60,9 @@ class _SpacePageState extends State<SpacePage> {
   @override
   Widget build(BuildContext context) {
     bool isAuthorSpace = space.idCreator == Provider.of<UserStore>(context).user.id;
+
+    List<Plant> searchedPlants = space.plants.where((element) =>
+        element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
     final searchField = TextFormField(
       controller: _searchController,
@@ -201,7 +205,7 @@ class _SpacePageState extends State<SpacePage> {
                   Expanded(
                       child: ListView.builder(
                           padding: const EdgeInsets.all(15),
-                          itemCount: space.plants.length,
+                          itemCount: searchedPlants.length,
                           itemBuilder: (context, index) {
                             void selectPlant(int index, bool? newValue) {
                               setState(() {
@@ -214,9 +218,9 @@ class _SpacePageState extends State<SpacePage> {
                             }
 
                             return PlantCard(
-                                currentPlant: space.plants[index],
+                                currentPlant: searchedPlants[index],
                                 isSelected: _idsSelectedPlants
-                                    .contains(space.plants[index].id),
+                                    .contains(searchedPlants[index].id),
                                 setIsSelectThisPlant: selectPlant);
                           }),
                       flex: 5)

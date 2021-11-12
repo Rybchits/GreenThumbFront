@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/image_picker.dart';
 import 'package:path/path.dart' as p;
+import 'package:number_inc_dec/number_inc_dec.dart';
 
 class PlantAddPage extends StatefulWidget {
   const PlantAddPage({Key? key, required this.spaceId}) : super(key: key);
@@ -18,6 +19,7 @@ class PlantAddPage extends StatefulWidget {
 class _PlantAddPageState extends State<PlantAddPage> {
   final _namePlantController = TextEditingController();
   final _groupPlantController = TextEditingController();
+  final _wateringPeriodController = TextEditingController();
   final _nameFocusNode = FocusNode();
   final _groupFocusNode = FocusNode();
   File? _imagePlant;
@@ -111,6 +113,13 @@ class _PlantAddPageState extends State<PlantAddPage> {
       controller: _groupPlantController,
     );
 
+    final wateringPeriodField = NumberInputWithIncrementDecrement(
+      controller: _wateringPeriodController,
+      initialValue: 1,
+      min: 1,
+      max: 31,
+    );
+
     final createButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(4.0),
@@ -153,6 +162,10 @@ class _PlantAddPageState extends State<PlantAddPage> {
                 ),
                 Container(
                     child: groupField,
+                    height: 56,
+                    margin: const EdgeInsets.only(bottom: 16)),
+                Container(
+                    child: wateringPeriodField,
                     height: 56,
                     margin: const EdgeInsets.only(bottom: 16)),
                 Container(
