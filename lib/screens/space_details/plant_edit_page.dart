@@ -1,10 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 class PlantAddPage extends StatefulWidget {
-  const PlantAddPage({Key? key}) : super(key: key);
+  const PlantAddPage({Key? key, required this.spaceId}) : super(key: key);
+
+  final int spaceId;
 
   @override
   _PlantAddPageState createState() => _PlantAddPageState();
@@ -32,6 +37,40 @@ class _PlantAddPageState extends State<PlantAddPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    Future<int> createPlant(
+        String name, String group, dynamic image64) async {
+      var res = await Session.post(
+          Uri.parse('${Session.SERVER_IP}/createPlant'),
+          jsonEncode({
+            'plantName': name,
+            'group': group,
+            'image': image64
+          }));
+      return res.statusCode;
+    }
+
+    Future<void> onCreateButtonClick() async {
+      var name = _namePlantController.text;
+      var group = _groupPlantController.text;
+
+      String img64 = "";
+      var ex = p.extension(_imagePlant?.path ?? "");
+      if (_imagePlant != null) {
+        final bytes = _imagePlant!.readAsBytesSync();
+        img64 = base64Encode(bytes);
+      }
+
+      var res = await createPlant(name, group, {'data': img64, 'extension': ex});
+
+      if (res == 200) {
+        print('created');
+
+        Navigator.pop(context);
+      } else {
+        print('error. Code: $res');
+      }
+    }
 
     final nameField = TextFormField(
       obscureText: false,
@@ -79,7 +118,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () => { Navigator.pop(context) },
+        onPressed: onCreateButtonClick,
         child: const Text("СОЗДАТЬ РАСТЕНИЕ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),

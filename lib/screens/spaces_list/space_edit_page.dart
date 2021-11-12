@@ -63,11 +63,15 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    Future<int> createSpace(String name, String time, String image64, String ex) async {
-      var res =
-      await Session.post(Uri.parse('${Session.SERVER_IP}/createSpace?spaceName=$name'),
-          jsonEncode({'spaceName': name, 'notificationTime' : time, 'image': {'data': image64, 'extension': ex} }));
+    Future<int> createSpace(
+        String name, String time, String image64, String ex) async {
+      var res = await Session.post(
+          Uri.parse('${Session.SERVER_IP}/createSpace?spaceName=$name'),
+          jsonEncode({
+            'spaceName': name,
+            'notificationTime': time,
+            'image': {'data': image64, 'extension': ex}
+          }));
       return res.statusCode;
     }
 
@@ -82,13 +86,13 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
       var time = formatTimeOfDay(_selectedTime);
       String img64 = "";
       var ex = p.extension(_image?.path ?? "");
-      if(_image != null){
+      if (_image != null) {
         final bytes = _image!.readAsBytesSync();
         img64 = base64Encode(bytes);
       }
 
       var res = await createSpace(name, time, img64, ex);
-      print(time);
+
       if (res == 200) {
         print('created');
 
@@ -227,14 +231,17 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
               children: <Widget>[
                 Container(
                   height: 80,
-                  child: Row(children: [
-                    Expanded(
-                      child: ImageFromGalleryEx(setImage: setImage),
-                      flex: 6,
-                    ),
-                    const Expanded(child: SizedBox(), flex: 1),
-                    Expanded(child: nameField, flex: 11)
-                  ], crossAxisAlignment: CrossAxisAlignment.stretch,),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ImageFromGalleryEx(setImage: setImage),
+                        flex: 6,
+                      ),
+                      const Expanded(child: SizedBox(), flex: 1),
+                      Expanded(child: nameField, flex: 11)
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  ),
                   margin: const EdgeInsets.only(bottom: 16),
                 ),
                 Container(
