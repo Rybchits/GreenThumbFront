@@ -41,11 +41,14 @@ class _PlantAddPageState extends State<PlantAddPage> {
   Widget build(BuildContext context) {
 
     Future<int> createPlant(
-        String name, String group, dynamic image64) async {
+        String name, String group, int wateringPeriod, dynamic image64) async {
       var res = await Session.post(
           Uri.parse('${Session.SERVER_IP}/createPlant'),
           jsonEncode({
+            'spaceId': widget.spaceId,
             'plantName': name,
+            'wateringPeriodDays': wateringPeriod,
+            'nextWateringDate': DateTime.now().toIso8601String(),
             'group': group,
             'image': image64
           }));
@@ -55,6 +58,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
     Future<void> onCreateButtonClick() async {
       var name = _namePlantController.text;
       var group = _groupPlantController.text;
+      var wateringPeriod = int.parse(_wateringPeriodController.text);
 
       String img64 = "";
       var ex = p.extension(_imagePlant?.path ?? "");
@@ -63,7 +67,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
         img64 = base64Encode(bytes);
       }
 
-      var res = await createPlant(name, group, {'data': img64, 'extension': ex});
+      var res = await createPlant(name, group, wateringPeriod, {'data': img64, 'extension': ex});
 
       if (res == 200) {
         print('created');
