@@ -237,7 +237,7 @@ class _SpacePageState extends State<SpacePage> {
                 showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
-                    builder: (_) => const PlantAddPage());
+                    builder: (_) => PlantAddPage(spaceId: space.id));
               },
             ),
           ),
