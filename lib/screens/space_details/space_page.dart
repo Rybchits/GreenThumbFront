@@ -33,9 +33,9 @@ class _SpacePageState extends State<SpacePage> {
             DateTime(1999, 12, 1), "https://rastenievod.com/wp-content/uploads/2017/05/1-24-700x658.jpg")
       ],
       [
-        User("", "",
+        User(0, "", "",
             "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"),
-        User("", "",
+        User(1, "", "",
             "https://sun9-87.userapi.com/impf/c849424/v849424663/ec86d/Pj6oJ8NDHsk.jpg?size=198x198&quality=96&sign=d457797e08c876def200b8a01dae1f22&type=audio")
       ],
       true);
@@ -160,6 +160,7 @@ class _SpacePageState extends State<SpacePage> {
                                                 space.users[index].urlAvatar,
                                                 "small")));
                                   })),
+
                           if (isAuthorSpace)
                             Container(
                               margin: const EdgeInsets.symmetric(vertical: 5),
@@ -177,6 +178,7 @@ class _SpacePageState extends State<SpacePage> {
                               height: 40,
                               width: 40,
                             ),
+
                           IconButton(
                               icon: Icon(
                                   space.notificationOn ? Icons.notifications_active_sharp

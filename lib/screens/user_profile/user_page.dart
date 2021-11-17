@@ -16,7 +16,8 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     void onLogoutButtonClick(){
-      Session.logout();
+      Session.removeCookie();
+      UserIdentifyingData.removeLastUser();
       Provider.of<UserStore>(context, listen: false).setUser(null);
       Navigator.pushNamedAndRemoveUntil(context, '/login',
               (Route<dynamic> route) => false);

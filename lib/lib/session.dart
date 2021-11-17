@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,8 +46,33 @@ class Session {
     }
   }
 
-  static void logout() {
+  static void removeCookie() {
     storage.delete(key: "cookie");
     headers['cookie'] = "";
   }
+}
+
+class UserIdentifyingData{
+
+  static const String _keyEmail = 'email';
+  static const String _keyPassword = 'password';
+
+  static Future setUserIdentifyingData(String email, String password) async {
+    await storage.write(key: _keyEmail, value: email);
+    await storage.write(key: _keyPassword, value: password);
+  }
+
+  static Future<String?> getEmail() async {
+    return await storage.read(key: _keyEmail);
+  }
+
+  static Future<String?> getPassword() async {
+    return await storage.read(key: _keyPassword);
+  }
+
+  static void removeLastUser() {
+    storage.delete(key: _keyEmail);
+    storage.delete(key: _keyPassword);
+  }
+
 }
