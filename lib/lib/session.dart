@@ -5,7 +5,7 @@ final storage = FlutterSecureStorage();
 
 class Session {
   static Map<String, String> headers = {'Content-Type': 'application/json'};
-  static const SERVER_IP = 'http://jenypc.ddns.net:3333';
+  static const SERVER_IP = 'jenypc.ddns.net:3333';
   static bool initialized = false;
 
   static _initialize() async {

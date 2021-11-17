@@ -42,8 +42,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
 
     Future<int> createPlant(
         String name, String group, int wateringPeriod, dynamic image64) async {
-      var res = await Session.post(
-          Uri.parse('${Session.SERVER_IP}/createPlant'),
+      var res = await Session.post( Uri.http(Session.SERVER_IP, '/createPlant'),
           jsonEncode({
             'spaceId': widget.spaceId,
             'plantName': name,

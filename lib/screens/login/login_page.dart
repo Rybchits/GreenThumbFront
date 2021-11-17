@@ -30,14 +30,12 @@ class _LoginPageState extends State<LoginPage> {
       UserIdentifyingData.getPassword().then((value) => password = value ?? '')
     ]);
 
-    var res = await Session.post(Uri.parse('${Session.SERVER_IP}/auth'),
+    var res = await Session.post(Uri.http(Session.SERVER_IP, '/auth'),
         jsonEncode(<String, String>{'email': email, 'password': password}));
 
 
     if(res.statusCode == 200){
       print('User authorized');
-
-      //Provider.of<UserStore>(context, listen: false).setUser( User( 0, "Кузнецова Анна Игоревна", "19106239@vstu.ru", "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"));
 
       await Provider.of<UserStore>(context, listen: false).fetchUser(context, email)
           .then((_) => Navigator.pushNamed(context, '/spaces'))

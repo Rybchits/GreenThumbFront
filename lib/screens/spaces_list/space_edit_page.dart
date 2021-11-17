@@ -65,8 +65,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   Widget build(BuildContext context) {
     Future<int> createSpace(
         String name, String time, String image64, String ex) async {
-      var res = await Session.post(
-          Uri.parse('${Session.SERVER_IP}/createSpace?spaceName=$name'),
+      var res = await Session.post( Uri.http(Session.SERVER_IP, '/createSpace', {'spaceName': name}),
           jsonEncode({
             'spaceName': name,
             'notificationTime': time,
