@@ -18,13 +18,15 @@ abstract class Space {
 class SpaceCardInfo extends Space {
   List<String> _tags = [];
   int _numberPlants = 0;
+  String? _avatarCreator;
 
   SpaceCardInfo(String name) {
     _name = name;
   }
 
-  SpaceCardInfo.fullConstructor(int idCreator, String name, String? imageUrl,
-      this._tags, this._numberPlants) {
+  SpaceCardInfo.fullConstructor(int idSpace, int idCreator, String name, String? imageUrl,
+      this._tags, this._numberPlants, this._avatarCreator) {
+    _idSpace = idSpace;
     _idCreator = idCreator;
     _name = name;
     _imageUrl = imageUrl;
@@ -32,11 +34,21 @@ class SpaceCardInfo extends Space {
 
   List<String> get tags => _tags;
   int get numberPlants => _numberPlants;
+  String? get avatarCreator => _avatarCreator;
+
+  factory SpaceCardInfo.fromJson(Map<String, dynamic> json){
+
+    String? imageCreator = json['users'].map((data) => User.fromJson(data))
+        .toList().first.urlAvatar;
+
+    return SpaceCardInfo.fullConstructor(json['spaceId'], json['creatorId'], json['name'],
+      json['imageUrl'], json['tags'].cast<String>(), json['plants'].length, imageCreator);
+  }
 }
 
 
 class SpaceCardContent extends Space {
-  TimeOfDay _notificationTime = TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay _notificationTime = const TimeOfDay(hour: 8, minute: 0);
   List<Plant> _plants = [];
   List<User> _users = [];
   bool _notificationOn = false;

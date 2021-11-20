@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/components/title.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/space_component.dart';
@@ -18,23 +21,18 @@ class SpacesListPage extends StatefulWidget {
 }
 
 class _SpacesListPageState extends State<SpacesListPage> {
-  
-  final List<SpaceCardInfo> spaces = <SpaceCardInfo>[
-    SpaceCardInfo.fullConstructor(1, "Моя квартира", "url", ['#ВолгГТУ'], 2),
-    SpaceCardInfo.fullConstructor(
-        1, "Твоя квартира", "url", ['#Home', '#YourFlat'], 4),
-    SpaceCardInfo.fullConstructor(1, "Наша квартира", "url", [], 999),
-    SpaceCardInfo.fullConstructor(1, "Бабки квартира", "url", [], 0),
-    SpaceCardInfo.fullConstructor(1, "Еще одна квартираааа", "url", [], 0)
-  ];
+
+  late Future<List<SpaceCardInfo>> spaces;
   final _searchController = TextEditingController();
   int spacesBelong = 0;
-  
+  bool loading = false;
+
   @override
   void initState() {
     _searchController.addListener(() {
       setState(() {});
     });
+    spaces = _fetchSpaces();
     super.initState();
   }
 
@@ -44,13 +42,22 @@ class _SpacesListPageState extends State<SpacesListPage> {
     super.dispose();
   }
 
+  Future<List<SpaceCardInfo>> _fetchSpaces() async{
+    final response = await Session.get(
+        Uri.http(Session.SERVER_IP, '/getSpaces', {'filter': 'all'}));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => SpaceCardInfo.fromJson(data)).toList();
+    } else {
+      throw Exception('Ошибка ${response.statusCode} при получении пространств');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final User? currentUser = Provider.of<UserStore>(context).user;
-
-    List<SpaceCardInfo> searchedSpaces = spaces.where((element) =>
-        element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
     final comboboxSpacesBelong = InputDecorator(
       decoration: InputDecoration(
@@ -116,8 +123,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
           toolbarHeight: 120,
         ),
         body: Container(
-          decoration:
-              const BoxDecoration(gradient: AppTheme.backgroundGradient),
+          decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
           padding: const EdgeInsets.symmetric(horizontal: 19),
           child: Column(
             children: <Widget>[
@@ -133,14 +139,31 @@ class _SpacesListPageState extends State<SpacesListPage> {
               ),
               const SizedBox(height: 10),
               Expanded(
-                child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    itemCount: searchedSpaces.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                          onTap: () => {Navigator.pushNamed(context, '/space')},
-                          child: SpaceCard(currentSpace: searchedSpaces[index]));
-                    }),
+                child: FutureBuilder(
+                    future: spaces,
+                    builder: (context, snapshot) {
+
+                      if (snapshot.hasData) {
+                        List<SpaceCardInfo> searchedSpaces = snapshot.data as List<SpaceCardInfo>;
+
+                        searchedSpaces = searchedSpaces.where((element) =>
+                            element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
+
+                        return searchedSpaces.isEmpty ? const Text("На данный момент пространств нет!") :
+                        ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            itemCount: searchedSpaces.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                  onTap: () => {Navigator.pushNamed(context, '/space')},
+                                  child: SpaceCard(currentSpace: searchedSpaces[index]));
+                            });
+                      }
+                      else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      return const CircularProgressIndicator();
+                })
               )
             ],
           ),
