@@ -54,6 +54,13 @@ class _SpacesListPageState extends State<SpacesListPage> {
     }
   }
 
+  Future<void> _refreshSpaces() async {
+    final newSpaces = _fetchSpaces();
+    setState(() {
+      spaces = newSpaces;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -149,20 +156,25 @@ class _SpacesListPageState extends State<SpacesListPage> {
                         searchedSpaces = searchedSpaces.where((element) =>
                             element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
-                        return searchedSpaces.isEmpty ? const Text("На данный момент пространств нет!") :
-                        ListView.builder(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            itemCount: searchedSpaces.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                  onTap: () => {Navigator.pushNamed(context, '/space')},
-                                  child: SpaceCard(currentSpace: searchedSpaces[index]));
-                            });
+                        return RefreshIndicator(
+                          onRefresh: _refreshSpaces,
+                          child: searchedSpaces.isEmpty ? const Text("На данный момент пространств нет!") :
+                          ListView.builder(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              itemCount: searchedSpaces.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                    onTap: () => {Navigator.pushNamed(context, '/space')},
+                                    child: SpaceCard(currentSpace: searchedSpaces[index]));
+                              }),
+                        );
                       }
                       else if (snapshot.hasError) {
                         return Text("${snapshot.error}");
                       }
-                      return const CircularProgressIndicator();
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                 })
               )
             ],
@@ -180,6 +192,8 @@ class _SpacesListPageState extends State<SpacesListPage> {
                   builder: (_) => const SpaceEditPage());
             },
           ),
-        ));
+        )
+    );
   }
 }
+
