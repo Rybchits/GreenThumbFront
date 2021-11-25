@@ -23,6 +23,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   final _tagsFocusNode = FocusNode();
   var _selectedTime = const TimeOfDay(hour: 0, minute: 0);
   File? _image;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -63,7 +64,8 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<int> createSpace(
+    
+    Future<void> createSpace(
         String name, String time, String image64, String ex) async {
       var res = await Session.post( Uri.http(Session.SERVER_IP, '/createSpace', {'spaceName': name}),
           jsonEncode({
@@ -71,7 +73,12 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
             'notificationTime': time,
             'image': {'data': image64, 'extension': ex}
           }));
-      return res.statusCode;
+
+      if (res.statusCode == 200) {
+        print('created');
+      } else {
+        Future.error ("Что-то пошло не так. Код ошибки: $res");
+      }
     }
 
     String formatTimeOfDay(TimeOfDay tod) {
@@ -81,6 +88,9 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     }
 
     Future<void> onCreateButtonClick() async {
+
+      _loading = true;
+
       var name = _nameController.text;
       var time = formatTimeOfDay(_selectedTime);
       String img64 = "";
@@ -90,15 +100,8 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
         img64 = base64Encode(bytes);
       }
 
-      var res = await createSpace(name, time, img64, ex);
-
-      if (res == 200) {
-        print('created');
-
-        Navigator.pop(context);
-      } else {
-        print('error. Code: $res');
-      }
+      await createSpace(name, time, img64, ex).then((value) => Navigator.pop(context));
+      _loading = false;
     }
 
     void setImage(File file) {
@@ -209,11 +212,12 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     final createButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(4.0),
-      color: Theme.of(context).primaryColorLight,
+      color: _loading? Colors.grey : Theme.of(context).primaryColorLight,
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: onCreateButtonClick,
+        onPressed: _loading? null : onCreateButtonClick,
+        disabledColor: Colors.grey,
         child: const Text("СОЗДАТЬ ПРОСТРАНСТВО",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),

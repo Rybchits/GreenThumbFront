@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
+import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
 
 import '../../app_theme.dart';
@@ -107,7 +108,8 @@ class SpaceCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                           child: FadeInImage.assetNetwork(
                               placeholder: "assets/images/VstuLogo.jpg",
-                              image: currentSpace.imageUrl  ?? "",
+                              image: currentSpace.imageUrl == null? ""
+                                  : Uri.http(Session.SERVER_IP, currentSpace.imageUrl!).toString(),
                               imageErrorBuilder: (context, error, stackTrace) =>
                                 Image.asset("assets/images/VstuLogo.jpg"),
                           ))
