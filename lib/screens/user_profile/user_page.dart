@@ -70,11 +70,11 @@ class UserPage extends StatelessWidget {
                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 30),
-                          child: UserAvatar(currentUser?.urlAvatar, 'large')),
+                          child: UserAvatar(currentUser!, 'large')),
                   flex: 8,
                   ),
                   Expanded(
-                    child: Text(currentUser != null? currentUser.name! : "",
+                    child: Text(currentUser.name!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 22)),

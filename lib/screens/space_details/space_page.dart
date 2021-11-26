@@ -20,22 +20,22 @@ class SpacePage extends StatefulWidget {
 }
 
 class _SpacePageState extends State<SpacePage> {
-  SpaceCardContent space = SpaceCardContent.fullConstructor(
-      0,
-      "Наша квартира",
+  SpaceCardContent space = SpaceCardContent.fullConstructor( 0, "Наша квартира",
+      User.fullConstructor(0, "", "",
+          "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"),
       "https://www.province.ru/media/k2/items/cache/2d565dcc1792c919daba23b9424013fe_Generic.jpg",
       const TimeOfDay(hour: 8, minute: 0),
-      [ Plant.fullConstructor( 1, "Мой любимый кактус", "Кактусы", 1, DateTime(1999, 12),
+      [
+        Plant.fullConstructor( 1, "Мой любимый кактус", "Кактусы", 1, DateTime(1999, 12),
             "https://picsy.ru/images/photos/375/2/gigantskij-kaktus-saguaro-32581489.jpg"),
         Plant.fullConstructor(2, "MoneyPlant", "", 1, DateTime(1999, 12, 2),
             "https://pocvetam.ru/wp-content/uploads/2019/08/1.-tolstjanka.jpg"),
-        Plant.fullConstructor( 3, "Фиалка новая кайфовая", "ууууу фиалки это круто", 1,
-            DateTime(1999, 12, 1), "https://rastenievod.com/wp-content/uploads/2017/05/1-24-700x658.jpg")
+        Plant.fullConstructor( 3, "Фиалка новая кайфовая", "ууууу фиалки это круто",
+            1, DateTime(1999, 12, 1),
+            "https://rastenievod.com/wp-content/uploads/2017/05/1-24-700x658.jpg")
       ],
       [
-        User(0, "", "",
-            "https://sun9-48.userapi.com/impf/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"),
-        User(1, "", "",
+        User.fullConstructor(1, "", "",
             "https://sun9-87.userapi.com/impf/c849424/v849424663/ec86d/Pj6oJ8NDHsk.jpg?size=198x198&quality=96&sign=d457797e08c876def200b8a01dae1f22&type=audio")
       ],
       true);
@@ -59,10 +59,14 @@ class _SpacePageState extends State<SpacePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isAuthorSpace = space.idCreator == Provider.of<UserStore>(context).user.id;
+    bool isAuthorSpace =
+        space.creator.id == Provider.of<UserStore>(context).user.id;
 
-    List<Plant> searchedPlants = space.plants.where((element) =>
-        element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
+    List<Plant> searchedPlants = space.plants
+        .where((element) => element.name
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase()))
+        .toList();
 
     final searchField = TextFormField(
       controller: _searchController,
@@ -91,16 +95,16 @@ class _SpacePageState extends State<SpacePage> {
             ? Colors.grey
             : Theme.of(context).primaryColor,
         child: MaterialButton(
-            onPressed: _idsSelectedPlants.isEmpty? null
+            onPressed: _idsSelectedPlants.isEmpty
+                ? null
                 : () => setState(() {
+                      for (var i = 0; i < space.plants.length; i++) {
+                        if (_idsSelectedPlants.contains(space.plants[i].id)) {
+                          space.plants[i].waterThisPlant();
+                        }
+                      }
 
-                  for (var i = 0; i < space.plants.length; i++) {
-                    if (_idsSelectedPlants.contains(space.plants[i].id)) {
-                      space.plants[i].waterThisPlant();
-                    }
-                  }
-
-                  _idsSelectedPlants.clear();
+                      _idsSelectedPlants.clear();
                     }),
             disabledColor: Colors.grey,
             child: const Text("ПОЛИТЬ",
@@ -113,18 +117,20 @@ class _SpacePageState extends State<SpacePage> {
           extendBodyBehindAppBar: true,
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-              backgroundColor: const Color.fromRGBO(115, 115, 115, 0.4),
-              elevation: 1,
-              actions: <Widget>[
-                Row( crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(space.name, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-                    const SizedBox(width: 10)
-                ])
-              ],
+            backgroundColor: const Color.fromRGBO(115, 115, 115, 0.4),
+            elevation: 1,
+            actions: <Widget>[
+              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                Text(space.name,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.w500)),
+                const SizedBox(width: 10)
+              ])
+            ],
           ),
           body: Container(
-            decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+            decoration:
+                const BoxDecoration(gradient: AppTheme.backgroundGradient),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -142,11 +148,19 @@ class _SpacePageState extends State<SpacePage> {
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width: 40.0,
+                              height: 40.0,
+                              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+                              child: FittedBox(fit: BoxFit.contain,
+                                  child: UserAvatar(space.creator, "small")
+                              )
+                          ),
                           SizedBox(
-                              width: 48.0 * space.users.length,
+                              width: 48.0 * space.otherParticipants.length,
                               child: ListView.builder(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  itemCount: space.users.length,
+                                  itemCount: space.otherParticipants.length,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
                                     return Container(
@@ -157,10 +171,9 @@ class _SpacePageState extends State<SpacePage> {
                                         child: FittedBox(
                                             fit: BoxFit.contain,
                                             child: UserAvatar(
-                                                space.users[index].urlAvatar,
+                                                space.otherParticipants[index],
                                                 "small")));
                                   })),
-
                           if (isAuthorSpace)
                             Container(
                               margin: const EdgeInsets.symmetric(vertical: 5),
@@ -178,10 +191,10 @@ class _SpacePageState extends State<SpacePage> {
                               height: 40,
                               width: 40,
                             ),
-
                           IconButton(
                               icon: Icon(
-                                  space.notificationOn ? Icons.notifications_active_sharp
+                                  space.notificationOn
+                                      ? Icons.notifications_active_sharp
                                       : Icons.notifications_none,
                                   size: 35),
                               onPressed: () {

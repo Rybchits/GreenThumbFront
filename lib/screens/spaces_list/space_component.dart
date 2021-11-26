@@ -61,7 +61,7 @@ class SpaceCard extends StatelessWidget {
                                           fontWeight: FontWeight.w600)),
                                   const SizedBox(width: 10),
                                   SizedBox(
-                                    child: UserAvatar(currentSpace.avatarCreator, 'small'),
+                                    child: UserAvatar(currentSpace.creator, 'small'),
                                     height: 28,
                                     width: 28,
                                   )

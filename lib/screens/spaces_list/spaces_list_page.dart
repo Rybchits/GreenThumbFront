@@ -120,7 +120,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
                   height: 64,
                   width: 64,
                   margin: const EdgeInsets.only(right: 15),
-                  child: UserAvatar(currentUser!.urlAvatar, 'medium'),
+                  child: UserAvatar(currentUser!, 'medium'),
                 ),
               onTap:  () => {Navigator.pushNamed(context, '/user-profile')},
             ),

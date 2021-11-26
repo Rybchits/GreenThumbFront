@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/models/user_class.dart';
 
 class UserAvatar extends StatelessWidget {
   double _radius = 219;
-  String? _urlImage = '';
+  late User _user;
 
-  UserAvatar(String? urlImage, String size, {Key? key}) : super(key: key) {
-    _urlImage = urlImage;
+  UserAvatar(User currentUser, String size, {Key? key}) : super(key: key) {
+    _user = currentUser;
 
-    switch (size){
+    switch (size) {
       case 'small':
         _radius = 28;
         break;
@@ -22,14 +23,12 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return CircleAvatar(
       radius: _radius,
-      child: Icon(
-        Icons.person,
-        color: Colors.white,
-        size: _radius/1.5,
-      ),
-      foregroundImage: _urlImage == null? null : NetworkImage(_urlImage!),
+      child: _user.urlAvatar == null ? Text(_user.name!.toUpperCase()[0],
+              style: TextStyle(color: Colors.white, fontSize: _radius/1.5)) : null,
+      backgroundImage: _user.urlAvatar == null ? null : NetworkImage(_user.urlAvatar!),
       backgroundColor: Theme.of(context).primaryColorLight,
     );
   }

@@ -4,7 +4,8 @@ class User {
     String? _email = "";
     String? _urlAvatar = "";
 
-    User(this._id, this._name, this._email, this._urlAvatar);
+    User();
+    User.fullConstructor(this._id, this._name, this._email, this._urlAvatar);
 
     int get id => _id;
     String? get name => _name;
@@ -12,6 +13,6 @@ class User {
     String? get urlAvatar => _urlAvatar;
 
     factory User.fromJson(Map<String, dynamic> json) {
-        return User( json['id'], json['name'], json['email'], json['imageUrl'] );
+        return User.fullConstructor( json['id'], json['name'], json['email'], json['imageUrl'] );
     }
 }
