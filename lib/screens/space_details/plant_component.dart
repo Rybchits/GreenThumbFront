@@ -57,7 +57,6 @@ class PlantCard extends StatelessWidget {
                                 style: const TextStyle(fontSize: 14)
                             ),
 
-                            // Todo контролить наличие следующей даты полива
                             Text("Следующий полив: " + DateFormat('dd.MM.yyyy')
                                     .format(currentPlant.dateOfNextWatering!),
                               style: const TextStyle(fontSize: 14),
@@ -72,7 +71,10 @@ class PlantCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                         child: FadeInImage.assetNetwork(
                             placeholder: "assets/images/PlantDefault.png",
-                            image: currentPlant.urlImage))),
+                            image: currentPlant.urlImage,
+                            imageErrorBuilder: (context, error, stackTrace) =>
+                                Image.asset("assets/images/PlantDefault.png"),
+                        ))),
                 flex: 7,
               )
             ],

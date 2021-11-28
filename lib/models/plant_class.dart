@@ -14,10 +14,17 @@ class Plant {
   int get wateringPeriodDays => _wateringPeriodDays;
 
   void waterThisPlant(){
+    _dateOfNextWatering = DateTime.now().add(Duration(days: wateringPeriodDays));
+  }
+
+  Plant(this._name){
     _dateOfNextWatering = DateTime.now();
   }
 
-  Plant(this._name);
   Plant.fullConstructor(this._id, this._name, this._group, this._wateringPeriodDays,
       this._dateOfNextWatering, this._urlImage);
+
+  factory Plant.fromJson(Map<String, dynamic> json){
+    return  Plant(json['plantName']);
+  }
 }
