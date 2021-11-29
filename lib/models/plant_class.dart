@@ -2,14 +2,14 @@ class Plant {
   int _id = 0;
   String _name = "";
   String _group = "";
-  String _urlImage = "";
+  String? _urlImage = "";
   DateTime? _dateOfNextWatering;
   int _wateringPeriodDays = 1;
 
   int get id => _id;
   String get name => _name;
   String get group => _group;
-  String get urlImage => _urlImage;
+  String? get urlImage => _urlImage;
   DateTime? get dateOfNextWatering => _dateOfNextWatering;
   int get wateringPeriodDays => _wateringPeriodDays;
 
@@ -17,7 +17,7 @@ class Plant {
     _dateOfNextWatering = DateTime.now().add(Duration(days: wateringPeriodDays));
   }
 
-  Plant(this._name){
+  Plant(this._id, this._name, this._group){
     _dateOfNextWatering = DateTime.now();
   }
 
@@ -25,6 +25,10 @@ class Plant {
       this._dateOfNextWatering, this._urlImage);
 
   factory Plant.fromJson(Map<String, dynamic> json){
-    return  Plant(json['plantName']);
+
+    DateTime tempDate = DateTime.parse(json['wateringDate']);
+
+    return  Plant.fullConstructor(json['plantId'] ,json['plantName'], json['group'],
+    json['wateringPeriodDays'], tempDate, json['imageUrl']);
   }
 }

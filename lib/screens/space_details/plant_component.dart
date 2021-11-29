@@ -71,7 +71,7 @@ class PlantCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                         child: FadeInImage.assetNetwork(
                             placeholder: "assets/images/PlantDefault.png",
-                            image: currentPlant.urlImage,
+                            image: currentPlant.urlImage ?? '',
                             imageErrorBuilder: (context, error, stackTrace) =>
                                 Image.asset("assets/images/PlantDefault.png"),
                         ))),

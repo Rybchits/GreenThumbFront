@@ -58,15 +58,16 @@ class _SpacePageState extends State<SpacePage> {
     }
   }
 
-  void waterSelectedPlants(SpaceCardContent space) {
-    setState(() {
-      for (var i = 0; i < space.plants.length; i++) {
-        if (_idsSelectedPlants.contains(space.plants[i].id)) {
-          space.plants[i].waterThisPlant();
-        }
-      }
-      _idsSelectedPlants.clear();
-    });
+  void waterSelectedPlants(SpaceCardContent space) async {
+
+    final response = await Session.post( Uri.http(Session.SERVER_IP, '/wateringPlants'),
+        json.encode({'plantsId': _idsSelectedPlants}));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _idsSelectedPlants.clear();
+      });
+    }
   }
 
   @override

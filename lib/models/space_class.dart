@@ -73,7 +73,7 @@ class SpaceCardContent extends Space {
 
     List<Plant> listPlants = (json['plants'] as List).map((e) => Plant.fromJson(e)).toList();
     List<String> tags = json['tags'].cast<String>();
-    String urlImage = json['imageUrl'];
+    String? urlImage = json['imageUrl'];
 
     return SpaceCardContent.fullConstructor(json['spaceId'], json['name'],
         creator,  urlImage, tags, const TimeOfDay(hour: 8, minute: 0),
