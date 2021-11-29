@@ -24,6 +24,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   var _selectedTime = const TimeOfDay(hour: 0, minute: 0);
   File? _image;
   bool _loading = false;
+  List<String> tags = [];
 
   @override
   void initState() {
@@ -64,13 +65,13 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     Future<void> createSpace(
-        String name, String time, String image64, String ex) async {
+        String name, String time, String image64, String ex, String tags) async {
       var res = await Session.post( Uri.http(Session.SERVER_IP, '/createSpace', {'spaceName': name}),
           jsonEncode({
             'spaceName': name,
             'notificationTime': time,
+            'tags': tags,
             'image': {'data': image64, 'extension': ex}
           }));
 
@@ -100,7 +101,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
         img64 = base64Encode(bytes);
       }
 
-      await createSpace(name, time, img64, ex).then((value) => Navigator.pop(context));
+      await createSpace(name, time, img64, ex, tags.join(',')).then((value) => Navigator.pop(context));
       _loading = false;
     }
 
@@ -159,7 +160,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     );
 
     final tagsField = ChipsInput(
-      initialValue: const [],
+      initialValue: const <String>[],
       focusNode: _tagsFocusNode,
       decoration: InputDecoration(
         labelText: "Теги пространства",
@@ -176,37 +177,35 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
             borderSide: BorderSide(
                 color: Theme.of(context).primaryColorDark, width: 2)),
       ),
-      maxChips: 3,
-      onChanged: (List<dynamic> value) {},
-      suggestionBuilder:
-          (BuildContext context, ChipsInputState<dynamic> state, data) {
-        return const ListTile(
-          key: ObjectKey(""),
-          title: Text(""),
+      onChanged: (List<String> data) {
+        tags = data;
+      },
+      chipBuilder: (context, state, dynamic value) {
+        return InputChip(
+          key: ObjectKey(value),
+          label: Text(value),
+          onDeleted: () => state.deleteChip(value),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );
       },
+        suggestionBuilder: (context, dynamic state, dynamic value) {
+          return ListTile(
+            key: ObjectKey(value),
+            title: Text(value),
+            subtitle: Text(value),
+          );
+        },
       findSuggestions: (String query) {
         if (query.isNotEmpty) {
           var lowercaseQuery = query.toLowerCase();
-          return [].where((profile) {
-            return profile.name.toLowerCase().contains(query.toLowerCase()) ||
-                profile.email.toLowerCase().contains(query.toLowerCase());
-          }).toList(growable: false)
-            ..sort((a, b) => a.name
-                .toLowerCase()
-                .indexOf(lowercaseQuery)
-                .compareTo(b.name.toLowerCase().indexOf(lowercaseQuery)));
+          return [query].where((value) {
+            return value.toLowerCase().contains(lowercaseQuery) ||
+                value.toLowerCase().contains(lowercaseQuery);
+          }).toList(growable: false);
         } else {
-          return const [];
+          return [query];
         }
-      },
-      chipBuilder:
-          (BuildContext context, ChipsInputState<dynamic> state, data) {
-        return const InputChip(
-          key: ObjectKey(""),
-          label: Text(""),
-        );
-      },
+      }
     );
 
     final createButton = Material(
