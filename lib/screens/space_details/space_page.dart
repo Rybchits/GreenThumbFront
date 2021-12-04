@@ -150,7 +150,7 @@ class _SpacePageState extends State<SpacePage> {
 
                   return RefreshIndicator(
                       onRefresh: () async {
-                        setState(() { });
+                        setState(() {});
                       },
                       child: SingleChildScrollView(
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -201,7 +201,8 @@ class _SpacePageState extends State<SpacePage> {
                                                       space.creator, "small"))),
                                           SizedBox(
                                               width: 48.0 *
-                                                  space.otherParticipants.length,
+                                                  space
+                                                      .otherParticipants.length,
                                               child: ListView.builder(
                                                   itemCount: space
                                                       .otherParticipants.length,
@@ -251,8 +252,10 @@ class _SpacePageState extends State<SpacePage> {
                                           IconButton(
                                               icon: Icon(
                                                   space.notificationOn
-                                                      ? Icons.notifications_active_sharp
-                                                      : Icons.notifications_none,
+                                                      ? Icons
+                                                          .notifications_active_sharp
+                                                      : Icons
+                                                          .notifications_none,
                                                   size: 35),
                                               onPressed: () {
                                                 setState(() {
@@ -303,24 +306,37 @@ class _SpacePageState extends State<SpacePage> {
                                                   });
                                                 }
 
-                                                return PlantCard(
-                                                    currentPlant:
-                                                        searchedPlants[index],
-                                                    isSelected:
-                                                        _idsSelectedPlants
-                                                            .contains(
-                                                                searchedPlants[
-                                                                        index]
-                                                                    .id),
-                                                    setIsSelectThisPlant:
-                                                        selectPlant);
+                                                return GestureDetector(
+                                                    onLongPressUp: () {
+                                                      showModalBottomSheet(
+                                                          isScrollControlled:
+                                                              true,
+                                                          context: context,
+                                                          builder: (_) => PlantAddPage(
+                                                              spaceId:
+                                                                  startInfo[
+                                                                      'id'],
+                                                              editingPlant:
+                                                                  searchedPlants[
+                                                                      index]));
+                                                    },
+                                                    child: PlantCard(
+                                                        currentPlant:
+                                                            searchedPlants[
+                                                                index],
+                                                        isSelected:
+                                                            _idsSelectedPlants
+                                                                .contains(
+                                                                    searchedPlants[
+                                                                            index]
+                                                                        .id),
+                                                        setIsSelectThisPlant:
+                                                            selectPlant));
                                               }),
                                       flex: 5)
                                 ]),
                             height: MediaQuery.of(context).size.height,
-                          )
-                      )
-                  );
+                          )));
                 } else if (snapshot.hasError) {
                   return Center(child: Text("${snapshot.error}"));
                 }

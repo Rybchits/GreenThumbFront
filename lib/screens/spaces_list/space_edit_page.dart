@@ -124,12 +124,12 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
 
       var name = _nameController.text;
       var time = formatTimeOfDay(_selectedTime);
-      String? img;
+      dynamic img;
       if (_image != null) {
         final bytes = _image!.readAsBytesSync();
         var img64 = base64Encode(bytes);
         var ex = p.extension(_image?.path ?? "");
-        img = jsonEncode({'data': img64, 'extension': ex});
+        img = {'data': img64, 'extension': ex};
       }
 
       await createSpace(name, time, img, tags.join(','))

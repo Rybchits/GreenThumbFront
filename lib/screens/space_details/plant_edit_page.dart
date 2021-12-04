@@ -48,9 +48,14 @@ class _PlantAddPageState extends State<PlantAddPage> {
 
     Future<int> createPlant(
         String name, String group, int wateringPeriod, dynamic image64) async {
-      var res = await Session.post( Uri.http(Session.SERVER_IP, '/createPlant'),
+      var res = await Session.post(
+          Uri.http(
+              Session.SERVER_IP,
+              widget.editingPlant != null ? '/editPlant' : '/createPlant',
+              {'plantId': widget.editingPlant?.id.toString()}),
           jsonEncode({
             'spaceId': widget.spaceId,
+            'plantId': widget.editingPlant?.id,
             'plantName': name,
             'wateringPeriodDays': wateringPeriod,
             'nextWateringDate': DateTime.now().toIso8601String(),
@@ -65,14 +70,15 @@ class _PlantAddPageState extends State<PlantAddPage> {
       var group = _groupPlantController.text;
       var wateringPeriod = int.parse(_wateringPeriodController.text);
 
-      String img64 = "";
+      dynamic img;
       var ex = p.extension(_imagePlant?.path ?? "");
       if (_imagePlant != null) {
         final bytes = _imagePlant!.readAsBytesSync();
-        img64 = base64Encode(bytes);
+        final img64 = base64Encode(bytes);
+        img = {'data': img64, 'extension': ex};
       }
 
-      var res = await createPlant(name, group, wateringPeriod, {'data': img64, 'extension': ex});
+      var res = await createPlant(name, group, wateringPeriod, img);
 
       if (res == 200) {
         print('created');
@@ -137,7 +143,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
         onPressed: onCreateButtonClick,
-        child: const Text("СОЗДАТЬ РАСТЕНИЕ",
+        child: Text(widget.editingPlant != null ? "РЕДАКТИРОВАТЬ РАСТЕНИЕ" : "СОЗДАТЬ РАСТЕНИЕ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
