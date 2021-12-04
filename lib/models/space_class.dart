@@ -7,33 +7,34 @@ abstract class Space {
   String _name = "";
   String? _imageUrl = "";
   User _creator = User();
+  List<String> _tags = [];
 
   String get name => _name;
   String? get imageUrl => _imageUrl;
   User get creator => _creator;
   int get id => _idSpace;
+  List<String> get tags => _tags;
 }
 
 
 class SpaceCardInfo extends Space {
-  List<String> _tags = [];
   int _numberPlants = 0;
 
   SpaceCardInfo.fullConstructor(int idSpace, User creator, String name, String? imageUrl,
-      this._tags, this._numberPlants) {
+      List<String> tags, this._numberPlants) {
+    _tags = tags;
     _idSpace = idSpace;
     _creator = creator;
     _name = name;
     _imageUrl = imageUrl;
   }
 
-  List<String> get tags => _tags;
   int get numberPlants => _numberPlants;
 
 
   factory SpaceCardInfo.fromJson(Map<String, dynamic> json){
     List<User> listUsers = (json['users'] as List).map((e) => User.fromJson(e)).toList();
-    User creator = listUsers.where((item) => item.id == json['creatorId']).toList().first;
+    User creator = listUsers.firstWhere((item) => item.id == json['creatorId']);
 
     return SpaceCardInfo.fullConstructor(json['spaceId'], creator, json['name'],
       json['imageUrl'], json['tags'].cast<String>(), json['plants'].length);
@@ -49,7 +50,7 @@ class SpaceCardContent extends Space {
 
 
   SpaceCardContent.fullConstructor(int id, String name, User creator, String? imageUrl,
-      this._notificationTime, this._plants, this._otherParticipants, this._notificationOn) {
+      List<String> tags, this._notificationTime, this._plants, this._otherParticipants) {
     _idSpace = id;
     _name = name;
     _creator = creator;
@@ -60,6 +61,22 @@ class SpaceCardContent extends Space {
   List<Plant> get plants => _plants;
   List<User> get otherParticipants => _otherParticipants;
   bool get notificationOn => _notificationOn;
-
   set notificationOn(bool value) => _notificationOn = value;
+
+
+  factory SpaceCardContent.fromJson(Map<String, dynamic> json){
+
+    List<User> listUsers = (json['users'] as List).map((e) => User.fromJson(e)).toList();
+
+    User creator = listUsers.firstWhere((item) => item.id == json['creatorId']);
+    listUsers.removeWhere((item) => item.id == json['creatorId']);
+
+    List<Plant> listPlants = (json['plants'] as List).map((e) => Plant.fromJson(e)).toList();
+    List<String> tags = json['tags'].cast<String>();
+    String? urlImage = json['imageUrl'];
+
+    return SpaceCardContent.fullConstructor(json['spaceId'], json['name'],
+        creator,  urlImage, tags, const TimeOfDay(hour: 8, minute: 0),
+        listPlants, listUsers);
+  }
 }

@@ -47,7 +47,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
         Uri.http(Session.SERVER_IP, '/getSpaces', {'filter': 'all'}));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       return jsonResponse.map((data) => SpaceCardInfo.fromJson(data)).toList();
     } else {
       throw Exception('Ошибка ${response.statusCode} при получении пространств');
@@ -164,13 +164,14 @@ class _SpacesListPageState extends State<SpacesListPage> {
                               itemCount: searchedSpaces.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return GestureDetector(
-                                    onTap: () => {Navigator.pushNamed(context, '/space')},
                                     onLongPressUp: () {
                                       showModalBottomSheet(
                                           isScrollControlled: true,
                                           context: context,
                                           builder: (_) => SpaceEditPage(editingSpace: searchedSpaces[index]));
                                     },
+                                    onTap: () => { Navigator.pushNamed(context, '/space',
+                                    arguments: {'id': searchedSpaces[index].id, 'name': searchedSpaces[index].name}) },
                                     child: SpaceCard(currentSpace: searchedSpaces[index]));
                               }),
                         );
