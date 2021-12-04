@@ -13,14 +13,13 @@ class SpaceCard extends StatelessWidget {
   Widget _buildChip(String label) {
     return Chip(
       labelPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-      label: Text(
-        label,
+      label: Text( label,
         style: const TextStyle(color: AppTheme.chipsColor, fontSize: 12),
       ),
       backgroundColor: AppTheme.chipsBackgroundColor,
       elevation: 3.0,
       shadowColor: Colors.grey[60],
-      padding: const EdgeInsets.all(1),
+      padding: const EdgeInsets.all(4),
       shape: RoundedRectangleBorder(
         side: const BorderSide(color: AppTheme.chipsColor, width: 1),
         borderRadius: BorderRadius.circular(15),
@@ -79,7 +78,7 @@ class SpaceCard extends StatelessWidget {
                                                   fontSize: 14)))
                                       : Wrap(
                                           spacing: 6.0,
-                                          runSpacing: 6.0,
+                                          runSpacing: 3.0,
                                           children: currentSpace.tags
                                               .map((e) => _buildChip(e))
                                               .toList())),

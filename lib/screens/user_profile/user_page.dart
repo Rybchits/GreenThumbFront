@@ -23,11 +23,11 @@ class UserPage extends StatelessWidget {
               (Route<dynamic> route) => false);
     }
 
-    final User? currentUser = Provider.of<UserStore>(context).user;
+    final User currentUser = Provider.of<UserStore>(context).user ?? User();
 
     final emailForm = TextFormField(
       enabled: false,
-      initialValue: currentUser?.email,
+      initialValue: currentUser.email,
       style: const TextStyle(
         color: Color(0xff232536),
         fontSize: 18,
@@ -70,11 +70,11 @@ class UserPage extends StatelessWidget {
                   Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 30),
-                          child: UserAvatar(currentUser!, 'large')),
+                          child: UserAvatar(currentUser, 'large')),
                   flex: 8,
                   ),
                   Expanded(
-                    child: Text(currentUser.name!,
+                    child: Text(currentUser.name ?? '',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 22)),
