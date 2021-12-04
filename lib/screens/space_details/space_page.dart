@@ -7,6 +7,7 @@ import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/models/plant_class.dart';
 import 'package:green_thumb_mobile/models/space_class.dart';
+import 'package:green_thumb_mobile/screens/space_details/add_participant_dialog.dart';
 import 'package:green_thumb_mobile/screens/space_details/plant_edit_page.dart';
 import 'package:green_thumb_mobile/screens/space_details/plant_component.dart';
 import 'package:green_thumb_mobile/stores/user_store.dart';
@@ -23,7 +24,6 @@ class SpacePage extends StatefulWidget {
 
 class _SpacePageState extends State<SpacePage> {
   late Map startInfo;
-  late Future<SpaceCardContent> spaceFuture;
 
   final _searchController = TextEditingController();
   List<int> _idsSelectedPlants = [];
@@ -59,8 +59,8 @@ class _SpacePageState extends State<SpacePage> {
   }
 
   void waterSelectedPlants(SpaceCardContent space) async {
-
-    final response = await Session.post( Uri.http(Session.SERVER_IP, '/wateringPlants'),
+    final response = await Session.post(
+        Uri.http(Session.SERVER_IP, '/wateringPlants'),
         json.encode({'plantsId': _idsSelectedPlants}));
 
     if (response.statusCode == 200) {
@@ -73,7 +73,6 @@ class _SpacePageState extends State<SpacePage> {
   @override
   Widget build(BuildContext context) {
     startInfo = ModalRoute.of(context)!.settings.arguments as Map;
-    spaceFuture = _fetchSpaceInfo();
 
     final searchField = TextFormField(
       controller: _searchController,
@@ -125,7 +124,12 @@ class _SpacePageState extends State<SpacePage> {
                 Text(startInfo['name'],
                     style: const TextStyle(
                         fontSize: 24, fontWeight: FontWeight.w500)),
-                const SizedBox(width: 10)
+                const SizedBox(width: 2),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.more_vert),
+                ),
+                const SizedBox(width: 3),
               ])
             ],
           ),
@@ -144,146 +148,178 @@ class _SpacePageState extends State<SpacePage> {
                           .contains(_searchController.text.toLowerCase()))
                       .toList();
 
-                  return Container(
-                    decoration: const BoxDecoration(
-                        gradient: AppTheme.backgroundGradient),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          FadeInImage.assetNetwork(
-                            placeholder: "assets/images/BigVstuLogo.jpg",
-                            image: space.imageUrl == null
-                                ? ""
-                                : Uri.http(Session.SERVER_IP, space.imageUrl!)
-                                    .toString(),
-                            imageErrorBuilder: (context, error, stackTrace) =>
-                                Image.asset("assets/images/BigVstuLogo.jpg"),
-                          ),
-                          const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                              child: Text("Участники",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500))),
-                          Expanded(
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                  return RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() { });
+                      },
+                      child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                gradient: AppTheme.backgroundGradient),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
-                                  Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      width: 40.0,
-                                      height: 40.0,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 2, vertical: 0),
-                                      child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: UserAvatar(
-                                              space.creator, "small"))),
-                                  SizedBox(
-                                      width:
-                                          48.0 * space.otherParticipants.length,
-                                      child: ListView.builder(
-                                          itemCount:
-                                              space.otherParticipants.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                                width: 40.0,
-                                                height: 40.0,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 2,
-                                                        vertical: 0),
-                                                child: FittedBox(
-                                                    fit: BoxFit.contain,
-                                                    child: UserAvatar(
-                                                        space.otherParticipants[
-                                                            index],
-                                                        "small")));
-                                          })),
-                                  if (isAuthorSpace)
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      child: RawMaterialButton(
-                                        onPressed: () {},
-                                        elevation: 2.0,
-                                        fillColor: Colors.white,
-                                        child: const Icon(Icons.add,
-                                            color: Color.fromRGBO(0, 0, 0, 0.2),
-                                            size: 30.0),
-                                        shape: const CircleBorder(
-                                            side: BorderSide(
-                                                color: Color.fromRGBO(
-                                                    0, 0, 0, 0.2))),
+                                  FadeInImage.assetNetwork(
+                                    placeholder:
+                                        "assets/images/BigVstuLogo.jpg",
+                                    image: space.imageUrl == null
+                                        ? ""
+                                        : Uri.http(Session.SERVER_IP,
+                                                space.imageUrl!)
+                                            .toString(),
+                                    imageErrorBuilder: (context, error,
+                                            stackTrace) =>
+                                        Image.asset(
+                                            "assets/images/BigVstuLogo.jpg"),
+                                  ),
+                                  const Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 20, 0, 0),
+                                      child: Text("Участники",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500))),
+                                  Expanded(
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 10),
+                                              width: 40.0,
+                                              height: 40.0,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2,
+                                                      vertical: 0),
+                                              child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: UserAvatar(
+                                                      space.creator, "small"))),
+                                          SizedBox(
+                                              width: 48.0 *
+                                                  space.otherParticipants.length,
+                                              child: ListView.builder(
+                                                  itemCount: space
+                                                      .otherParticipants.length,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Container(
+                                                        width: 40.0,
+                                                        height: 40.0,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 2,
+                                                                vertical: 0),
+                                                        child: FittedBox(
+                                                            fit: BoxFit.contain,
+                                                            child: UserAvatar(
+                                                                space.otherParticipants[
+                                                                    index],
+                                                                "small")));
+                                                  })),
+                                          if (isAuthorSpace)
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: RawMaterialButton(
+                                                onPressed: () {
+                                                  displayTextInputDialog(
+                                                      context, space.id);
+                                                },
+                                                elevation: 2.0,
+                                                fillColor: Colors.white,
+                                                child: const Icon(Icons.add,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 0.2),
+                                                    size: 30.0),
+                                                shape: const CircleBorder(
+                                                    side: BorderSide(
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 0.2))),
+                                              ),
+                                              height: 40,
+                                              width: 40,
+                                            ),
+                                          IconButton(
+                                              icon: Icon(
+                                                  space.notificationOn
+                                                      ? Icons.notifications_active_sharp
+                                                      : Icons.notifications_none,
+                                                  size: 35),
+                                              onPressed: () {
+                                                setState(() {
+                                                  space.notificationOn =
+                                                      !space.notificationOn;
+                                                });
+                                              })
+                                        ]),
+                                    flex: 1,
+                                  ),
+                                  Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                                child: searchField, flex: 8),
+                                            const Expanded(
+                                                child: SizedBox(), flex: 1),
+                                            Expanded(
+                                                child: createWaterButton(space),
+                                                flex: 4)
+                                          ],
+                                        ),
                                       ),
-                                      height: 40,
-                                      width: 40,
-                                    ),
-                                  IconButton(
-                                      icon: Icon(
-                                          space.notificationOn
-                                              ? Icons.notifications_active_sharp
-                                              : Icons.notifications_none,
-                                          size: 35),
-                                      onPressed: () {
-                                        setState(() {
-                                          space.notificationOn =
-                                              !space.notificationOn;
-                                        });
-                                      })
+                                      flex: 1),
+                                  Expanded(
+                                      child: searchedPlants.isEmpty
+                                          ? const Center(
+                                              child: Text(
+                                                  "На данный момент растений нет!"))
+                                          : ListView.builder(
+                                              padding: const EdgeInsets.all(15),
+                                              itemCount: searchedPlants.length,
+                                              itemBuilder: (context, index) {
+                                                void selectPlant(
+                                                    int index, bool? newValue) {
+                                                  setState(() {
+                                                    if (newValue == true) {
+                                                      _idsSelectedPlants
+                                                          .add(index);
+                                                    } else if (newValue ==
+                                                        false) {
+                                                      _idsSelectedPlants
+                                                          .remove(index);
+                                                    }
+                                                  });
+                                                }
+
+                                                return PlantCard(
+                                                    currentPlant:
+                                                        searchedPlants[index],
+                                                    isSelected:
+                                                        _idsSelectedPlants
+                                                            .contains(
+                                                                searchedPlants[
+                                                                        index]
+                                                                    .id),
+                                                    setIsSelectThisPlant:
+                                                        selectPlant);
+                                              }),
+                                      flex: 5)
                                 ]),
-                            flex: 1,
-                          ),
-                          Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(child: searchField, flex: 8),
-                                    const Expanded(child: SizedBox(), flex: 1),
-                                    Expanded(
-                                        child: createWaterButton(space),
-                                        flex: 4)
-                                  ],
-                                ),
-                              ),
-                              flex: 1),
-                          Expanded(
-                              child: searchedPlants.isEmpty
-                                  ? const Center(child: Text("На данный момент растений нет!"))
-                                  : ListView.builder(
-                                      padding: const EdgeInsets.all(15),
-                                      itemCount: searchedPlants.length,
-                                      itemBuilder: (context, index) {
-                                        void selectPlant(
-                                            int index, bool? newValue) {
-                                          setState(() {
-                                            if (newValue == true) {
-                                              _idsSelectedPlants.add(index);
-                                            } else if (newValue == false) {
-                                              _idsSelectedPlants.remove(index);
-                                            }
-                                          });
-                                        }
-                                        return GestureDetector(
-                                            onLongPressUp: () {
-                                              showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  context: context,
-                                                  builder: (_) => PlantAddPage(spaceId: startInfo['id'], editingPlant: searchedPlants[index]));
-                                            },
-                                            child: PlantCard(
-                                              currentPlant: searchedPlants[index],
-                                              isSelected:
-                                                  _idsSelectedPlants.contains(
-                                                      searchedPlants[index].id),
-                                              setIsSelectThisPlant: selectPlant));
-                                      }),
-                              flex: 5)
-                        ]),
+                            height: MediaQuery.of(context).size.height,
+                          )
+                      )
                   );
                 } else if (snapshot.hasError) {
                   return Center(child: Text("${snapshot.error}"));

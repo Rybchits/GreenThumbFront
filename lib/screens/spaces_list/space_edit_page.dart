@@ -102,7 +102,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
           jsonEncode({
             'spaceName': name,
             'notificationTime': time,
-            'tags': tags,
+            'tagsLabel': tags,
             'image': image
           }));
 
