@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
+import 'package:green_thumb_mobile/models/plant_class.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:number_inc_dec/number_inc_dec.dart';
 
 class PlantAddPage extends StatefulWidget {
-  const PlantAddPage({Key? key, required this.spaceId}) : super(key: key);
+  const PlantAddPage({Key? key, required this.spaceId, this.editingPlant}) : super(key: key);
 
   final int spaceId;
+  final Plant? editingPlant;
 
   @override
   _PlantAddPageState createState() => _PlantAddPageState();
@@ -29,6 +31,10 @@ class _PlantAddPageState extends State<PlantAddPage> {
     super.initState();
     _nameFocusNode.addListener(_onFocusNodeEvent);
     _groupFocusNode.addListener(_onFocusNodeEvent);
+
+    _namePlantController.text = widget.editingPlant?.name ?? '';
+    _groupPlantController.text = widget.editingPlant?.group ?? '';
+    _wateringPeriodController.text = widget.editingPlant?.wateringPeriodDays.toString() ?? '';
   }
 
   _onFocusNodeEvent() {
@@ -155,7 +161,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
                   height: 80,
                   child: Row(children: [
                     Expanded(
-                      child: ImageFromGalleryEx(setImage: setImage),
+                      child: ImageFromGalleryEx(setImage: setImage, initialImageUrl: widget.editingPlant?.urlImage),
                       flex: 6,
                     ),
                     const Expanded(child: SizedBox(), flex: 1),

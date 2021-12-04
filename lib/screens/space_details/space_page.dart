@@ -268,13 +268,19 @@ class _SpacePageState extends State<SpacePage> {
                                             }
                                           });
                                         }
-
-                                        return PlantCard(
-                                            currentPlant: searchedPlants[index],
-                                            isSelected:
-                                                _idsSelectedPlants.contains(
-                                                    searchedPlants[index].id),
-                                            setIsSelectThisPlant: selectPlant);
+                                        return GestureDetector(
+                                            onLongPressUp: () {
+                                              showModalBottomSheet(
+                                                  isScrollControlled: true,
+                                                  context: context,
+                                                  builder: (_) => PlantAddPage(spaceId: startInfo['id'], editingPlant: searchedPlants[index]));
+                                            },
+                                            child: PlantCard(
+                                              currentPlant: searchedPlants[index],
+                                              isSelected:
+                                                  _idsSelectedPlants.contains(
+                                                      searchedPlants[index].id),
+                                              setIsSelectThisPlant: selectPlant));
                                       }),
                               flex: 5)
                         ]),

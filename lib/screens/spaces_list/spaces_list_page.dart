@@ -168,7 +168,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
                                       showModalBottomSheet(
                                           isScrollControlled: true,
                                           context: context,
-                                          builder: (_) => SpaceEditPage(editingSpace: searchedSpaces[index]));
+                                          builder: (_) => SpaceEditPage(editingSpaceId: searchedSpaces[index].id));
                                     },
                                     onTap: () => { Navigator.pushNamed(context, '/space',
                                     arguments: {'id': searchedSpaces[index].id, 'name': searchedSpaces[index].name}) },
