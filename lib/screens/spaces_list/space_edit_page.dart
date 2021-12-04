@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
+import 'package:green_thumb_mobile/models/space_class.dart';
 import 'image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
 class SpaceEditPage extends StatefulWidget {
-  const SpaceEditPage({Key? key}) : super(key: key);
+  final SpaceCardInfo? editingSpace;
+
+  const SpaceEditPage({Key? key, this.editingSpace}) : super(key: key);
 
   @override
   _SpaceEditPageState createState() => _SpaceEditPageState();
@@ -28,6 +31,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   @override
   void initState() {
     super.initState();
+    _nameController.text = widget.editingSpace?.name ?? '';
     _nameFocusNode.addListener(_onFocusNodeEvent);
     _notificationTimeFocusNode.addListener(_onFocusNodeEvent);
     _tagsFocusNode.addListener(_onFocusNodeEvent);
@@ -237,7 +241,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: ImageFromGalleryEx(setImage: setImage),
+                        child: ImageFromGalleryEx(setImage: setImage, initialImageUrl: widget.editingSpace?.imageUrl),
                         flex: 6,
                       ),
                       const Expanded(child: SizedBox(), flex: 1),

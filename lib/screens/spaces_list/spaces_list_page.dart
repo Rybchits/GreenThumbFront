@@ -165,6 +165,12 @@ class _SpacesListPageState extends State<SpacesListPage> {
                               itemBuilder: (BuildContext context, int index) {
                                 return GestureDetector(
                                     onTap: () => {Navigator.pushNamed(context, '/space')},
+                                    onLongPressUp: () {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (_) => SpaceEditPage(editingSpace: searchedSpaces[index]));
+                                    },
                                     child: SpaceCard(currentSpace: searchedSpaces[index]));
                               }),
                         );
