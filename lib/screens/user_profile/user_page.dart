@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/components/avatar.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
 import 'package:green_thumb_mobile/models/user_class.dart';
+import 'package:green_thumb_mobile/screens/user_profile/list_invitations.dart';
 import 'package:green_thumb_mobile/stores/user_store.dart';
 import 'package:provider/provider.dart';
 
@@ -64,8 +65,7 @@ class UserPage extends StatelessWidget {
         body: Align(
             alignment: Alignment.topCenter,
             child: Container(
-                decoration:
-                    const BoxDecoration(gradient: AppTheme.backgroundGradient),
+                decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
                 child: Column(children: [
                   Expanded(
                       child: Padding(
@@ -81,7 +81,6 @@ class UserPage extends StatelessWidget {
                     flex: 2,
                   ),
                   Expanded(
-
                     child: Container(
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -89,9 +88,16 @@ class UserPage extends StatelessWidget {
                     ),
                     flex: 2,
                   ),
+                  Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      child: const Text(
+                          "Приглашения",
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16))
+                  ),
                   const Expanded(
                     flex: 4,
-                    child: SizedBox()
+                    child: ListInvitations()
                   )
                 ])
             )
