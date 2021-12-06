@@ -84,8 +84,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     Future<int> attemptSignUp(
         String name, String email, String password) async {
-      var res = await Session.post(Uri.parse('${Session.SERVER_IP}/register'),
+      var res = await Session.post(Uri.http(Session.SERVER_IP, '/register'),
           jsonEncode(<String, String>{'name': name, 'email': email, 'password': password}));
+
       return res.statusCode;
     }
 

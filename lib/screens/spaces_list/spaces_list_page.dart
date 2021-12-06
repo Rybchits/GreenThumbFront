@@ -21,7 +21,6 @@ class SpacesListPage extends StatefulWidget {
 }
 
 class _SpacesListPageState extends State<SpacesListPage> {
-
   late Future<List<SpaceCardInfo>> spaces;
   final _searchController = TextEditingController();
   int spacesBelong = 0;
@@ -42,7 +41,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
     super.dispose();
   }
 
-  Future<List<SpaceCardInfo>> _fetchSpaces() async{
+  Future<List<SpaceCardInfo>> _fetchSpaces() async {
     final response = await Session.get(
         Uri.http(Session.SERVER_IP, '/getSpaces', {'filter': 'all'}));
 
@@ -50,7 +49,8 @@ class _SpacesListPageState extends State<SpacesListPage> {
       List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       return jsonResponse.map((data) => SpaceCardInfo.fromJson(data)).toList();
     } else {
-      throw Exception('Ошибка ${response.statusCode} при получении пространств');
+      throw Exception(
+          'Ошибка ${response.statusCode} при получении пространств');
     }
   }
 
@@ -63,7 +63,6 @@ class _SpacesListPageState extends State<SpacesListPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final User? currentUser = Provider.of<UserStore>(context).user;
 
     final comboboxSpacesBelong = InputDecorator(
@@ -116,69 +115,87 @@ class _SpacesListPageState extends State<SpacesListPage> {
           title: TitleLogo('small'),
           actions: [
             GestureDetector(
-                child: Container(
-                  height: 64,
-                  width: 64,
-                  margin: const EdgeInsets.only(right: 15),
-                  child: UserAvatar(currentUser!, 'medium'),
-                ),
-              onTap:  () => {Navigator.pushNamed(context, '/user-profile')},
+              child: Container(
+                height: 64,
+                width: 64,
+                margin: const EdgeInsets.only(right: 15),
+                child: UserAvatar(currentUser!, 'medium'),
+              ),
+              onTap: () => {Navigator.pushNamed(context, '/user-profile')},
             ),
           ],
           backgroundColor: const Color(0xfff7f7f7),
           automaticallyImplyLeading: false,
           toolbarHeight: 120,
         ),
-        body: Container(
-          decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-          padding: const EdgeInsets.symmetric(horizontal: 19),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Expanded(child: searchField, flex: 8),
-                  const Expanded(child: SizedBox(width: 20), flex: 1),
-                  Expanded(
-                      child: SizedBox(child: comboboxSpacesBelong, height: 35),
-                      flex: 4)
-                ],
-                crossAxisAlignment: CrossAxisAlignment.end,
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: FutureBuilder(
-                    future: spaces,
-                    builder: (context, snapshot) {
+        body: RefreshIndicator(
+          onRefresh: _refreshSpaces,
+          child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Container(
+                  decoration: const BoxDecoration(
+                      gradient: AppTheme.backgroundGradient),
+                  padding: const EdgeInsets.symmetric(horizontal: 19),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(child: searchField, flex: 8),
+                          const Expanded(child: SizedBox(width: 20), flex: 1),
+                          Expanded(
+                              child: SizedBox(
+                                  child: comboboxSpacesBelong, height: 35),
+                              flex: 4)
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                          child: FutureBuilder(
+                              future: spaces,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<SpaceCardInfo> searchedSpaces =
+                                      snapshot.data as List<SpaceCardInfo>;
 
-                      if (snapshot.hasData) {
-                        List<SpaceCardInfo> searchedSpaces = snapshot.data as List<SpaceCardInfo>;
+                                  searchedSpaces = searchedSpaces
+                                      .where((element) => element.name
+                                          .toLowerCase()
+                                          .contains(_searchController.text
+                                              .toLowerCase()))
+                                      .toList();
 
-                        searchedSpaces = searchedSpaces.where((element) =>
-                            element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
-
-                        return RefreshIndicator(
-                          onRefresh: _refreshSpaces,
-                          child: searchedSpaces.isEmpty ? const Text("На данный момент пространств нет!") :
-                          ListView.builder(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              itemCount: searchedSpaces.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                    onTap: () => { Navigator.pushNamed(context, '/space',
-                                    arguments: {'id': searchedSpaces[index].id, 'name': searchedSpaces[index].name}) },
-                                    child: SpaceCard(currentSpace: searchedSpaces[index]));
-                              }),
-                        );
-                      }
-                      else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                })
+                                  return searchedSpaces.isEmpty
+                                        ? const Center(
+                                            child: Text(
+                                                "На данный момент пространств нет!"))
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            padding: const EdgeInsets.symmetric(vertical: 20),
+                                            itemCount: searchedSpaces.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                  onTap: () => {
+                                                        Navigator.pushNamed(context, '/space',
+                                                            arguments: {'id':searchedSpaces[index].id, 'name': searchedSpaces[index].name})
+                                                      },
+                                                  child: SpaceCard(
+                                                      currentSpace:
+                                                          searchedSpaces[
+                                                              index]));
+                                            });
+                                } else if (snapshot.hasError) {
+                                  return Text("${snapshot.error}");
+                                }
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }))
+                    ],
+                  ),
+                height: MediaQuery.of(context).size.height
               )
-            ],
           ),
         ),
         floatingActionButton: Padding(
@@ -193,8 +210,6 @@ class _SpacesListPageState extends State<SpacesListPage> {
                   builder: (_) => const SpaceEditPage());
             },
           ),
-        )
-    );
+        ));
   }
 }
-

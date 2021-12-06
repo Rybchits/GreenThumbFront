@@ -237,13 +237,10 @@ class _SpacePageState extends State<SpacePage> {
                                                 elevation: 2.0,
                                                 fillColor: Colors.white,
                                                 child: const Icon(Icons.add,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 0.2),
+                                                    color: Colors.green,
                                                     size: 30.0),
                                                 shape: const CircleBorder(
-                                                    side: BorderSide(
-                                                        color: Color.fromRGBO(
-                                                            0, 0, 0, 0.2))),
+                                                    side: BorderSide(color: Colors.green, width: 2)),
                                               ),
                                               height: 40,
                                               width: 40,
