@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
+import 'package:green_thumb_mobile/models/plant_class.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:number_inc_dec/number_inc_dec.dart';
 
 class PlantAddPage extends StatefulWidget {
-  const PlantAddPage({Key? key, required this.spaceId}) : super(key: key);
+  const PlantAddPage({Key? key, required this.spaceId, this.editingPlant}) : super(key: key);
 
   final int spaceId;
+  final Plant? editingPlant;
 
   @override
   _PlantAddPageState createState() => _PlantAddPageState();
@@ -29,6 +31,10 @@ class _PlantAddPageState extends State<PlantAddPage> {
     super.initState();
     _nameFocusNode.addListener(_onFocusNodeEvent);
     _groupFocusNode.addListener(_onFocusNodeEvent);
+
+    _namePlantController.text = widget.editingPlant?.name ?? '';
+    _groupPlantController.text = widget.editingPlant?.group ?? '';
+    _wateringPeriodController.text = widget.editingPlant?.wateringPeriodDays.toString() ?? '';
   }
 
   _onFocusNodeEvent() {
@@ -42,9 +48,14 @@ class _PlantAddPageState extends State<PlantAddPage> {
 
     Future<int> createPlant(
         String name, String group, int wateringPeriod, dynamic image64) async {
-      var res = await Session.post( Uri.http(Session.SERVER_IP, '/createPlant'),
+      var res = await Session.post(
+          Uri.http(
+              Session.SERVER_IP,
+              widget.editingPlant != null ? '/editPlant' : '/createPlant',
+              {'plantId': widget.editingPlant?.id.toString()}),
           jsonEncode({
             'spaceId': widget.spaceId,
+            'plantId': widget.editingPlant?.id,
             'plantName': name,
             'wateringPeriodDays': wateringPeriod,
             'nextWateringDate': DateTime.now().toIso8601String(),
@@ -59,14 +70,15 @@ class _PlantAddPageState extends State<PlantAddPage> {
       var group = _groupPlantController.text;
       var wateringPeriod = int.parse(_wateringPeriodController.text);
 
-      String img64 = "";
+      dynamic img;
       var ex = p.extension(_imagePlant?.path ?? "");
       if (_imagePlant != null) {
         final bytes = _imagePlant!.readAsBytesSync();
-        img64 = base64Encode(bytes);
+        final img64 = base64Encode(bytes);
+        img = {'data': img64, 'extension': ex};
       }
 
-      var res = await createPlant(name, group, wateringPeriod, {'data': img64, 'extension': ex});
+      var res = await createPlant(name, group, wateringPeriod, img);
 
       if (res == 200) {
         print('created');
@@ -131,7 +143,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
         onPressed: onCreateButtonClick,
-        child: const Text("СОЗДАТЬ РАСТЕНИЕ",
+        child: Text(widget.editingPlant != null ? "РЕДАКТИРОВАТЬ РАСТЕНИЕ" : "СОЗДАТЬ РАСТЕНИЕ",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
@@ -155,7 +167,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
                   height: 80,
                   child: Row(children: [
                     Expanded(
-                      child: ImageFromGalleryEx(setImage: setImage),
+                      child: ImageFromGalleryEx(setImage: setImage, initialImageUrl: widget.editingPlant?.urlImage),
                       flex: 6,
                     ),
                     const Expanded(child: SizedBox(), flex: 1),

@@ -4,18 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:green_thumb_mobile/lib/session.dart';
+import 'package:green_thumb_mobile/models/space_class.dart';
 import 'image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
 class SpaceEditPage extends StatefulWidget {
-  const SpaceEditPage({Key? key}) : super(key: key);
+  final int? editingSpaceId;
+
+  const SpaceEditPage({Key? key, this.editingSpaceId}) : super(key: key);
 
   @override
   _SpaceEditPageState createState() => _SpaceEditPageState();
 }
 
 class _SpaceEditPageState extends State<SpaceEditPage> {
+  SpaceCardContent? oldSpace;
+
   final _notificationTimeController = TextEditingController();
   final _nameController = TextEditingController();
   final _notificationTimeFocusNode = FocusNode();
@@ -32,6 +37,17 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     _nameFocusNode.addListener(_onFocusNodeEvent);
     _notificationTimeFocusNode.addListener(_onFocusNodeEvent);
     _tagsFocusNode.addListener(_onFocusNodeEvent);
+
+    if(widget.editingSpaceId != null){
+      _fetchSpaceInfo().then((value){
+        setState(() {
+          oldSpace = value;
+          _nameController.text = oldSpace?.name ?? '';
+          _notificationTimeController.text = oldSpace?.notificationTime.format(context) ?? '';
+          tags = oldSpace?.tags ?? [];
+        });
+      });
+    }
   }
 
   @override
@@ -63,22 +79,37 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     }
   }
 
+  Future<SpaceCardContent> _fetchSpaceInfo() async {
+    final response = await Session.get(Uri.http(
+        Session.SERVER_IP, '/getSpace', {'spaceId': widget.editingSpaceId.toString()}));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse =
+          json.decode(utf8.decode(response.bodyBytes));
+
+      return SpaceCardContent.fromJson(jsonResponse);
+    } else {
+      throw Exception(
+          'Ошибка ${response.statusCode} при получении информации о пространстве');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<void> createSpace(
-        String name, String time, String image64, String ex, String tags) async {
-      var res = await Session.post( Uri.http(Session.SERVER_IP, '/createSpace', {'spaceName': name}),
+    Future<void> createSpace(String name, String time, String? image, String tags) async {
+      var res = await Session.post(
+          Uri.http(Session.SERVER_IP, widget.editingSpaceId != null ? '/editSpace' : '/createSpace', {'spaceId': widget.editingSpaceId?.toString()}),
           jsonEncode({
             'spaceName': name,
             'notificationTime': time,
             'tagsLabel': tags,
-            'image': {'data': image64, 'extension': ex}
+            'image': image
           }));
 
       if (res.statusCode == 200) {
         print('created');
       } else {
-        Future.error ("Что-то пошло не так. Код ошибки: $res");
+        Future.error("Что-то пошло не так. Код ошибки: ${res.statusCode}");
       }
     }
 
@@ -89,19 +120,20 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     }
 
     Future<void> onCreateButtonClick() async {
-
       _loading = true;
 
       var name = _nameController.text;
       var time = formatTimeOfDay(_selectedTime);
-      String img64 = "";
-      var ex = p.extension(_image?.path ?? "");
+      dynamic img;
       if (_image != null) {
         final bytes = _image!.readAsBytesSync();
-        img64 = base64Encode(bytes);
+        var img64 = base64Encode(bytes);
+        var ex = p.extension(_image?.path ?? "");
+        img = {'data': img64, 'extension': ex};
       }
 
-      await createSpace(name, time, img64, ex, tags.join(',')).then((value) => Navigator.pop(context));
+      await createSpace(name, time, img, tags.join(','))
+          .then((value) => Navigator.pop(context));
       _loading = false;
     }
 
@@ -160,34 +192,34 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     );
 
     final tagsField = ChipsInput(
-      initialValue: const <String>[],
-      focusNode: _tagsFocusNode,
-      decoration: InputDecoration(
-        labelText: "Теги пространства",
-        labelStyle: TextStyle(
-            color: _tagsFocusNode.hasFocus
-                ? Theme.of(context).primaryColorDark
-                : const Color.fromRGBO(0, 0, 0, 60)),
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          borderSide: const BorderSide(color: Color(0xff979797)),
+        initialValue: const <String>[],
+        focusNode: _tagsFocusNode,
+        decoration: InputDecoration(
+          labelText: "Теги пространства",
+          labelStyle: TextStyle(
+              color: _tagsFocusNode.hasFocus
+                  ? Theme.of(context).primaryColorDark
+                  : const Color.fromRGBO(0, 0, 0, 60)),
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            borderSide: const BorderSide(color: Color(0xff979797)),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColorDark, width: 2)),
         ),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: Theme.of(context).primaryColorDark, width: 2)),
-      ),
-      onChanged: (List<String> data) {
-        tags = data;
-      },
-      chipBuilder: (context, state, dynamic value) {
-        return InputChip(
-          key: ObjectKey(value),
-          label: Text(value),
-          onDeleted: () => state.deleteChip(value),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        );
-      },
+        onChanged: (List<String> data) {
+          tags = data;
+        },
+        chipBuilder: (context, state, dynamic value) {
+          return InputChip(
+            key: ObjectKey(value),
+            label: Text(value),
+            onDeleted: () => state.deleteChip(value),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          );
+        },
         suggestionBuilder: (context, dynamic state, dynamic value) {
           return ListTile(
             key: ObjectKey(value),
@@ -195,29 +227,28 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
             subtitle: Text(value),
           );
         },
-      findSuggestions: (String query) {
-        if (query.isNotEmpty) {
-          var lowercaseQuery = query.toLowerCase();
-          return [query].where((value) {
-            return value.toLowerCase().contains(lowercaseQuery) ||
-                value.toLowerCase().contains(lowercaseQuery);
-          }).toList(growable: false);
-        } else {
-          return [query];
-        }
-      }
-    );
+        findSuggestions: (String query) {
+          if (query.isNotEmpty) {
+            var lowercaseQuery = query.toLowerCase();
+            return [query].where((value) {
+              return value.toLowerCase().contains(lowercaseQuery) ||
+                  value.toLowerCase().contains(lowercaseQuery);
+            }).toList(growable: false);
+          } else {
+            return [query];
+          }
+        });
 
     final createButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(4.0),
-      color: _loading? Colors.grey : Theme.of(context).primaryColorLight,
+      color: _loading ? Colors.grey : Theme.of(context).primaryColorLight,
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: _loading? null : onCreateButtonClick,
+        onPressed: _loading ? null : onCreateButtonClick,
         disabledColor: Colors.grey,
-        child: const Text("СОЗДАТЬ ПРОСТРАНСТВО",
+        child: Text(widget.editingSpaceId != null ? "РЕДАКТИРОВАТЬ ПРОСТРАНСТВО" : "СОЗДАТЬ ПРОСТРАНСТВО",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
@@ -236,7 +267,9 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: ImageFromGalleryEx(setImage: setImage),
+                        child: ImageFromGalleryEx(
+                            setImage: setImage,
+                            initialImageUrl: oldSpace?.imageUrl),
                         flex: 6,
                       ),
                       const Expanded(child: SizedBox(), flex: 1),

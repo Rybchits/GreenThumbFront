@@ -21,6 +21,7 @@ class SpacesListPage extends StatefulWidget {
 }
 
 class _SpacesListPageState extends State<SpacesListPage> {
+
   late Future<List<SpaceCardInfo>> spaces;
   final _searchController = TextEditingController();
   int spacesBelong = 0;
@@ -63,6 +64,7 @@ class _SpacesListPageState extends State<SpacesListPage> {
 
   @override
   Widget build(BuildContext context) {
+
     final User? currentUser = Provider.of<UserStore>(context).user;
 
     final comboboxSpacesBelong = InputDecorator(
@@ -176,14 +178,15 @@ class _SpacesListPageState extends State<SpacesListPage> {
                                             itemBuilder: (BuildContext context,
                                                 int index) {
                                               return GestureDetector(
-                                                  onTap: () => {
-                                                        Navigator.pushNamed(context, '/space',
-                                                            arguments: {'id':searchedSpaces[index].id, 'name': searchedSpaces[index].name})
-                                                      },
-                                                  child: SpaceCard(
-                                                      currentSpace:
-                                                          searchedSpaces[
-                                                              index]));
+                                                  onLongPressUp: () {
+                                                    showModalBottomSheet(
+                                                        isScrollControlled: true,
+                                                        context: context,
+                                                        builder: (_) => SpaceEditPage(editingSpaceId: searchedSpaces[index].id));
+                                                  },
+                                                  onTap: () => { Navigator.pushNamed(context, '/space',
+                                                      arguments: {'id': searchedSpaces[index].id, 'name': searchedSpaces[index].name}) },
+                                                  child: SpaceCard(currentSpace: searchedSpaces[index]));
                                             });
                                 } else if (snapshot.hasError) {
                                   return Text("${snapshot.error}");
@@ -210,6 +213,8 @@ class _SpacesListPageState extends State<SpacesListPage> {
                   builder: (_) => const SpaceEditPage());
             },
           ),
-        ));
+        )
+    );
   }
 }
+
