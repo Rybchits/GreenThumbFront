@@ -176,7 +176,7 @@ class _SpacePageState extends State<SpacePage> {
                                           child: FittedBox(
                                               fit: BoxFit.contain, child: UserAvatar(space.creator, "small"))),
                                       SizedBox(
-                                          width: 48.0 * space.otherParticipants.length,
+                                          width: 43.0 * space.otherParticipants.length,
                                           child: ListView.builder(
                                               itemCount: space.otherParticipants.length,
                                               scrollDirection: Axis.horizontal,
