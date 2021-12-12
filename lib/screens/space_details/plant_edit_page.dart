@@ -130,7 +130,6 @@ class _PlantAddPageState extends State<PlantAddPage> {
 
     final wateringPeriodField = NumberInputWithIncrementDecrement(
       controller: _wateringPeriodController,
-      initialValue: 1,
       min: 1,
       max: 31,
     );
@@ -145,7 +144,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
         onPressed: onCreateButtonClick,
         child: Text(widget.editingPlant != null ? "РЕДАКТИРОВАТЬ РАСТЕНИЕ" : "СОЗДАТЬ РАСТЕНИЕ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.white)),
+            style: const TextStyle(fontSize: 14, color: Colors.white)),
       ),
     );
 

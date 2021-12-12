@@ -47,13 +47,11 @@ class PlantCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Text(
-                              currentPlant.name.length < 19? currentPlant.name
-                                  : currentPlant.name.substring(0, 15) + "...",
+                              currentPlant.name.length < 19? currentPlant.name : currentPlant.name.substring(0, 15) + "...",
                               style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w700),
                             ),
-                            Text("Группа цветов: " +
-                                (currentPlant.group.isNotEmpty? currentPlant.group : "не указана"),
+                            Text("Группа цветов: " + (currentPlant.group.isNotEmpty? currentPlant.group : "не указана"),
                                 style: const TextStyle(fontSize: 14)
                             ),
 

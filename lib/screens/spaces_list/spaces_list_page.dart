@@ -64,8 +64,9 @@ class _SpacesListPageState extends State<SpacesListPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    final User? currentUser = Provider.of<UserStore>(context).user;
+    final User? currentUser = Provider
+        .of<UserStore>(context)
+        .user;
 
     final comboboxSpacesBelong = InputDecorator(
       decoration: InputDecoration(
@@ -108,7 +109,9 @@ class _SpacesListPageState extends State<SpacesListPage> {
         ),
         contentPadding: EdgeInsets.fromLTRB(5.0, 20.0, 10.0, 0.0),
       ),
-      cursorColor: Theme.of(context).primaryColorDark,
+      cursorColor: Theme
+          .of(context)
+          .primaryColorDark,
     );
 
     return Scaffold(
@@ -158,36 +161,38 @@ class _SpacesListPageState extends State<SpacesListPage> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   List<SpaceCardInfo> searchedSpaces =
-                                      snapshot.data as List<SpaceCardInfo>;
+                                  snapshot.data as List<SpaceCardInfo>;
 
                                   searchedSpaces = searchedSpaces
-                                      .where((element) => element.name
-                                          .toLowerCase()
-                                          .contains(_searchController.text
-                                              .toLowerCase()))
-                                      .toList();
+                                      .where((element) =>
+                                      element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
                                   return searchedSpaces.isEmpty
-                                        ? const Center(
-                                            child: Text(
-                                                "На данный момент пространств нет!"))
-                                        : ListView.builder(
-                                            shrinkWrap: true,
-                                            padding: const EdgeInsets.symmetric(vertical: 20),
-                                            itemCount: searchedSpaces.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return GestureDetector(
-                                                  onLongPressUp: () {
-                                                    showModalBottomSheet(
-                                                        isScrollControlled: true,
-                                                        context: context,
-                                                        builder: (_) => SpaceEditPage(editingSpaceId: searchedSpaces[index].id));
-                                                  },
-                                                  onTap: () => { Navigator.pushNamed(context, '/space',
-                                                      arguments: {'id': searchedSpaces[index].id, 'name': searchedSpaces[index].name}) },
-                                                  child: SpaceCard(currentSpace: searchedSpaces[index]));
-                                            });
+                                      ? const Center(
+                                      child: Text(
+                                          "На данный момент пространств нет!"))
+                                      : ListView.builder(
+                                      shrinkWrap: true,
+                                      padding: const EdgeInsets.symmetric(vertical: 20),
+                                      itemCount: searchedSpaces.length,
+                                      itemBuilder: (BuildContext context,
+                                          int index) {
+                                        return GestureDetector(
+                                            onLongPressUp: () {
+                                              showModalBottomSheet(
+                                                  isScrollControlled: true,
+                                                  context: context,
+                                                  builder: (_) =>
+                                                      SpaceEditPage(editingSpaceId: searchedSpaces[index].id));
+                                            },
+                                            onTap: () =>
+                                            { Navigator.pushNamed(context, '/space',
+                                                arguments: {
+                                                  'id': searchedSpaces[index].id,
+                                                  'name': searchedSpaces[index].name
+                                                })},
+                                            child: SpaceCard(currentSpace: searchedSpaces[index]));
+                                      });
                                 } else if (snapshot.hasError) {
                                   return Text("${snapshot.error}");
                                 }
@@ -197,14 +202,19 @@ class _SpacesListPageState extends State<SpacesListPage> {
                               }))
                     ],
                   ),
-                height: MediaQuery.of(context).size.height
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height
               )
           ),
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 40.0, right: 5),
           child: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme
+                .of(context)
+                .primaryColor,
             child: const Icon(Icons.add),
             onPressed: () {
               showModalBottomSheet(

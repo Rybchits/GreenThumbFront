@@ -38,8 +38,8 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     _notificationTimeFocusNode.addListener(_onFocusNodeEvent);
     _tagsFocusNode.addListener(_onFocusNodeEvent);
 
-    if(widget.editingSpaceId != null){
-      _fetchSpaceInfo().then((value){
+    if (widget.editingSpaceId != null) {
+      _fetchSpaceInfo().then((value) {
         setState(() {
           oldSpace = value;
           _nameController.text = oldSpace?.name ?? '';
@@ -80,17 +80,15 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   }
 
   Future<SpaceCardContent> _fetchSpaceInfo() async {
-    final response = await Session.get(Uri.http(
-        Session.SERVER_IP, '/getSpace', {'spaceId': widget.editingSpaceId.toString()}));
+    final response =
+        await Session.get(Uri.http(Session.SERVER_IP, '/getSpace', {'spaceId': widget.editingSpaceId.toString()}));
 
     if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse =
-          json.decode(utf8.decode(response.bodyBytes));
+      Map<String, dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
       return SpaceCardContent.fromJson(jsonResponse);
     } else {
-      throw Exception(
-          'Ошибка ${response.statusCode} при получении информации о пространстве');
+      throw Exception('Ошибка ${response.statusCode} при получении информации о пространстве');
     }
   }
 
@@ -98,13 +96,9 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
   Widget build(BuildContext context) {
     Future<void> createSpace(String name, String time, String? image, String tags) async {
       var res = await Session.post(
-          Uri.http(Session.SERVER_IP, widget.editingSpaceId != null ? '/editSpace' : '/createSpace', {'spaceId': widget.editingSpaceId?.toString()}),
-          jsonEncode({
-            'spaceName': name,
-            'notificationTime': time,
-            'tagsLabel': tags,
-            'image': image
-          }));
+          Uri.http(Session.SERVER_IP, widget.editingSpaceId != null ? '/editSpace' : '/createSpace',
+              {'spaceId': widget.editingSpaceId?.toString()}),
+          jsonEncode({'spaceName': name, 'notificationTime': time, 'tagsLabel': tags, 'image': image}));
 
       if (res.statusCode == 200) {
         print('created');
@@ -132,8 +126,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
         img = {'data': img64, 'extension': ex};
       }
 
-      await createSpace(name, time, img, tags.join(','))
-          .then((value) => Navigator.pop(context));
+      await createSpace(name, time, img, tags.join(',')).then((value) => Navigator.pop(context));
       _loading = false;
     }
 
@@ -167,9 +160,8 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
               borderRadius: BorderRadius.circular(4.0),
               borderSide: const BorderSide(color: Color(0xff979797)),
             ),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: Theme.of(context).primaryColorDark, width: 2)),
+            focusedBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)),
           ),
           controller: _notificationTimeController,
         ));
@@ -180,10 +172,8 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
       style: const TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
       decoration: InputDecoration(
         hintText: 'Название пространства...',
-        hintStyle: TextStyle(
-            color: _nameFocusNode.hasFocus
-                ? const Color(0xffA9B2AA)
-                : const Color.fromRGBO(0, 0, 0, 60)),
+        hintStyle:
+            TextStyle(color: _nameFocusNode.hasFocus ? const Color(0xffA9B2AA) : const Color.fromRGBO(0, 0, 0, 60)),
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Color(0xffA9B2AA)),
         ),
@@ -192,22 +182,20 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     );
 
     final tagsField = ChipsInput(
-        initialValue: const <String>[],
+        // Todo ждать загрузки
+        initialValue: tags,
         focusNode: _tagsFocusNode,
         decoration: InputDecoration(
           labelText: "Теги пространства",
           labelStyle: TextStyle(
-              color: _tagsFocusNode.hasFocus
-                  ? Theme.of(context).primaryColorDark
-                  : const Color.fromRGBO(0, 0, 0, 60)),
+              color: _tagsFocusNode.hasFocus ? Theme.of(context).primaryColorDark : const Color.fromRGBO(0, 0, 0, 60)),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4.0),
             borderSide: const BorderSide(color: Color(0xff979797)),
           ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context).primaryColorDark, width: 2)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)),
         ),
         onChanged: (List<String> data) {
           tags = data;
@@ -231,8 +219,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
           if (query.isNotEmpty) {
             var lowercaseQuery = query.toLowerCase();
             return [query].where((value) {
-              return value.toLowerCase().contains(lowercaseQuery) ||
-                  value.toLowerCase().contains(lowercaseQuery);
+              return value.toLowerCase().contains(lowercaseQuery) || value.toLowerCase().contains(lowercaseQuery);
             }).toList(growable: false);
           } else {
             return [query];
@@ -249,8 +236,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
         onPressed: _loading ? null : onCreateButtonClick,
         disabledColor: Colors.grey,
         child: Text(widget.editingSpaceId != null ? "РЕДАКТИРОВАТЬ ПРОСТРАНСТВО" : "СОЗДАТЬ ПРОСТРАНСТВО",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.white)),
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
     );
 
@@ -267,9 +253,7 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: ImageFromGalleryEx(
-                            setImage: setImage,
-                            initialImageUrl: oldSpace?.imageUrl),
+                        child: ImageFromGalleryEx(setImage: setImage, initialImageUrl: oldSpace?.imageUrl),
                         flex: 6,
                       ),
                       const Expanded(child: SizedBox(), flex: 1),
@@ -279,18 +263,9 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
                   ),
                   margin: const EdgeInsets.only(bottom: 16),
                 ),
-                Container(
-                    child: notificationTimeField,
-                    height: 56,
-                    margin: const EdgeInsets.only(bottom: 16)),
-                Container(
-                    child: tagsField,
-                    height: 56,
-                    margin: const EdgeInsets.only(bottom: 16)),
-                Container(
-                    child: createButton,
-                    height: 36,
-                    margin: const EdgeInsets.only(bottom: 5)),
+                Container(child: notificationTimeField, height: 56, margin: const EdgeInsets.only(bottom: 16)),
+                Container(child: tagsField, height: 56, margin: const EdgeInsets.only(bottom: 16)),
+                Container(child: createButton, height: 36, margin: const EdgeInsets.only(bottom: 5)),
               ],
             )));
   }
