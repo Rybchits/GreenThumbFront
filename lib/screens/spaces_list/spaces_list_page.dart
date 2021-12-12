@@ -160,11 +160,10 @@ class _SpacesListPageState extends State<SpacesListPage> {
                               future: spaces,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  List<SpaceCardInfo> searchedSpaces =
-                                  snapshot.data as List<SpaceCardInfo>;
+                                  List<SpaceCardInfo> searchedSpaces = snapshot.data as List<SpaceCardInfo>;
+                                  searchedSpaces.sort((a, b) => a.name.compareTo(b.name));
 
-                                  searchedSpaces = searchedSpaces
-                                      .where((element) =>
+                                  searchedSpaces = searchedSpaces.where((element) =>
                                       element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
                                   return searchedSpaces.isEmpty

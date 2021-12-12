@@ -65,6 +65,15 @@ class _SpacePageState extends State<SpacePage> {
     }
   }
 
+  void setNotifications(SpaceCardContent space) async {
+    final response = await Session.post(Uri.http(Session.SERVER_IP, '/setNotification',
+        {'spaceId': space.id.toString(), 'state': (!space.notificationOn).toString()}), jsonEncode({}));
+
+    if (response.statusCode == 200){
+      setState(() { });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     startInfo = ModalRoute.of(context)!.settings.arguments as Map;
@@ -201,11 +210,7 @@ class _SpacePageState extends State<SpacePage> {
                                                   ? Icons.notifications_active_sharp
                                                   : Icons.notifications_none,
                                               size: 35),
-                                          onPressed: () {
-                                            setState(() {
-                                              space.notificationOn = !space.notificationOn;
-                                            });
-                                          })
+                                          onPressed: () { setNotifications(space); })
                                     ]),
                                     flex: 1,
                                   ),

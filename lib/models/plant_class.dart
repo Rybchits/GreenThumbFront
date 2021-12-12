@@ -26,7 +26,7 @@ class Plant {
 
   factory Plant.fromJson(Map<String, dynamic> json){
 
-    DateTime tempDate = DateTime.parse(json['wateringDate']);
+    DateTime tempDate = DateTime.parse(json['wateringDate']).add(Duration(hours: 3, days: json['wateringPeriodDays']));
 
     return  Plant.fullConstructor(json['plantId'] ,json['plantName'], json['group'],
     json['wateringPeriodDays'], tempDate, json['imageUrl']);
