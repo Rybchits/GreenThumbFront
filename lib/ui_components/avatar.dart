@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/models/user_class.dart';
+import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
 
 class UserAvatar extends StatelessWidget {
   double _radius = 219;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/models/plant_class.dart';
-import 'package:green_thumb_mobile/models/user_class.dart';
+import 'package:green_thumb_mobile/business_logic/models/plant_class.dart';
+import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
 
 abstract class Space {
   int _idSpace = 0;

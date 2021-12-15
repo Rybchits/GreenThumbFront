@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
-import 'package:green_thumb_mobile/models/plant_class.dart';
-import 'package:green_thumb_mobile/screens/spaces_list/image_picker.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/business_logic/models/plant_class.dart';
+import 'package:green_thumb_mobile/ui_components/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:number_inc_dec/number_inc_dec.dart';
 
@@ -32,6 +32,7 @@ class _PlantAddPageState extends State<PlantAddPage> {
     _nameFocusNode.addListener(_onFocusNodeEvent);
     _groupFocusNode.addListener(_onFocusNodeEvent);
 
+    // Todo убрать...
     _namePlantController.text = widget.editingPlant?.name ?? '';
     _groupPlantController.text = widget.editingPlant?.group ?? '';
     _wateringPeriodController.text = widget.editingPlant?.wateringPeriodDays.toString() ?? '';

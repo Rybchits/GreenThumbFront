@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
-import 'package:green_thumb_mobile/models/space_class.dart';
-import 'image_picker.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+
+import '../../../ui_components/image_picker.dart';
 
 class SpaceEditPage extends StatefulWidget {
   final int? editingSpaceId;

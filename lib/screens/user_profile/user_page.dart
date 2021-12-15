@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/components/avatar.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
-import 'package:green_thumb_mobile/models/user_class.dart';
-import 'package:green_thumb_mobile/screens/user_profile/list_invitations.dart';
-import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:green_thumb_mobile/ui_components/avatar.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
+import 'package:green_thumb_mobile/screens/user_profile/components/list_invitations.dart';
+import 'package:green_thumb_mobile/business_logic/stores/user_store.dart';
 import 'package:provider/provider.dart';
 
 

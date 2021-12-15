@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:green_thumb_mobile/screens/login/login_page.dart';
-import 'package:green_thumb_mobile/screens/login/registration_page.dart';
+import 'package:green_thumb_mobile/screens/registration/registration_page.dart';
 import 'package:green_thumb_mobile/screens/space_details/space_page.dart';
 import 'package:green_thumb_mobile/screens/user_profile/user_page.dart';
-import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:green_thumb_mobile/business_logic/stores/user_store.dart';
 import 'screens/spaces_list/spaces_list_page.dart';
 import 'package:provider/provider.dart';
 

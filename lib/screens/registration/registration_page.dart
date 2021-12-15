@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/components/title.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
+import 'package:green_thumb_mobile/ui_components/title.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
 import 'package:http/http.dart' as http;
 import '../../app_theme.dart';
-
-
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -57,33 +55,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     // Function for create input field
-    TextFormField inputField(String label, TextEditingController controller,
-        FocusNode focus, bool isVisible) {
+    TextFormField inputField(String label, TextEditingController controller, FocusNode focus, bool isVisible) {
       return TextFormField(
         obscureText: !isVisible,
         focusNode: focus,
         style: const TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(
-              color: focus.hasFocus
-                  ? Theme.of(context).primaryColorDark
-                  : const Color.fromRGBO(0, 0, 0, 60)),
+          labelStyle:
+              TextStyle(color: focus.hasFocus ? Theme.of(context).primaryColorDark : const Color.fromRGBO(0, 0, 0, 60)),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4.0),
             borderSide: const BorderSide(color: Color(0xff979797)),
           ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context).primaryColorDark, width: 2)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColorDark, width: 2)),
         ),
         controller: controller,
       );
     }
 
-    Future<int> attemptSignUp(
-        String name, String email, String password) async {
+    Future<int> attemptSignUp(String name, String email, String password) async {
       var res = await Session.post(Uri.http(Session.SERVER_IP, '/register'),
           jsonEncode(<String, String>{'name': name, 'email': email, 'password': password}));
 
@@ -103,11 +96,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
           var password = _passwordController.text;
 
           var res = await attemptSignUp(username, email, password);
-          if (res == 200){
+          if (res == 200) {
             print("The user was created. Log in now.");
             Navigator.popAndPushNamed(context, '/login');
-          }
-          else if (res == 400)
+          } else if (res == 400)
             print("Request parameters not valid");
           else if (res == 460)
             print("This email already exists");
@@ -115,16 +107,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
             print("An unknown error occurred. code: $res");
           }
         },
-        child: const Text("РЕГИСТРАЦИЯ",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.white)),
+        child:
+            const Text("РЕГИСТРАЦИЯ", textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
     );
 
     final signInLink = InkWell(
       child: Text('Уже есть аккаунт? Войдите в него!',
-          style: TextStyle(
-              fontSize: 14, color: Theme.of(context).primaryColorDark)),
+          style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark)),
       onTap: () => {Navigator.pushNamed(context, '/login')},
     );
 
@@ -132,56 +122,50 @@ class _RegistrationPageState extends State<RegistrationPage> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
             body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-          decoration:
-              const BoxDecoration(gradient: AppTheme.backgroundGradient),
-          child: Center(
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                      child: TitleLogo("medium"),
-                      margin: const EdgeInsets.only(bottom: 38)),
-                  Container(
-                      child: inputField(
-                          "ФИО", _fullNameController, _fullNameFocusNode, true),
-                      height: 56,
-                      margin: const EdgeInsets.only(bottom: 18)),
-                  Container(
-                      child: inputField('Электронная почта', _emailController,
-                          _emailFocusNode, true),
-                      height: 56,
-                      margin: const EdgeInsets.only(bottom: 18)),
-                  Container(
-                      child: inputField("Пароль", _passwordController,
-                          _passwordFocusNode, false),
-                      height: 56,
-                      margin: const EdgeInsets.only(bottom: 18)),
-                  Container(
-                      child: inputField(
-                          "Повторите пароль",
-                          _passwordRepeatController,
-                          _passwordRepeatFocusNode,
-                          false),
-                      height: 56,
-                      margin: const EdgeInsets.only(bottom: 25)),
-                  Container(
-                    child: registrationButton,
-                    height: 36,
-                    margin: const EdgeInsets.only(bottom: 28),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
+              decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+              child: Center(
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+
+                  // Todo вынести форму для регистрации в отдельный класс
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(child: TitleLogo("medium"), margin: const EdgeInsets.only(bottom: 38)),
+                      Container(
+                          child: inputField("ФИО", _fullNameController, _fullNameFocusNode, true),
+                          height: 56,
+                          margin: const EdgeInsets.only(bottom: 18)),
+                      Container(
+                          child: inputField('Электронная почта', _emailController, _emailFocusNode, true),
+                          height: 56,
+                          margin: const EdgeInsets.only(bottom: 18)),
+                      Container(
+                          child: inputField("Пароль", _passwordController, _passwordFocusNode, false),
+                          height: 56,
+                          margin: const EdgeInsets.only(bottom: 18)),
+                      Container(
+                          child: inputField("Повторите пароль", _passwordRepeatController, _passwordRepeatFocusNode, false),
+                          height: 56,
+                          margin: const EdgeInsets.only(bottom: 25)),
+                      Container(
+                        child: registrationButton,
+                        height: 36,
+                        margin: const EdgeInsets.only(bottom: 28),
+                      ),
+                      Container(
+                        child: signInLink,
+                      )
+                    ],
                   ),
-                  Container(
-                    child: signInLink,
-                  )
-                ],
+                ),
               ),
-            ),
-          ),
-        )));
+            )
+        )
+    );
   }
 }

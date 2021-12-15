@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/components/avatar.dart';
-import 'package:green_thumb_mobile/components/title.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
-import 'package:green_thumb_mobile/models/space_class.dart';
-import 'package:green_thumb_mobile/models/user_class.dart';
-import 'package:green_thumb_mobile/screens/spaces_list/space_component.dart';
-import 'package:green_thumb_mobile/screens/spaces_list/space_edit_page.dart';
-import 'package:green_thumb_mobile/stores/user_store.dart';
+import 'package:green_thumb_mobile/ui_components/avatar.dart';
+import 'package:green_thumb_mobile/ui_components/title.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
+import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
+import 'package:green_thumb_mobile/screens/spaces_list/components/space_component.dart';
+import 'package:green_thumb_mobile/screens/spaces_list/components/space_edit_page.dart';
+import 'package:green_thumb_mobile/business_logic/stores/user_store.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';

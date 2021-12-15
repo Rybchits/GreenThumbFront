@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
-import 'package:green_thumb_mobile/models/space_class.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
 
 class InvitationCard extends StatelessWidget {
   final SpaceCardContent invitedSpace;

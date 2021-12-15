@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/components/avatar.dart';
-import 'package:green_thumb_mobile/lib/session.dart';
-import 'package:green_thumb_mobile/models/space_class.dart';
+import 'package:green_thumb_mobile/ui_components/avatar.dart';
+import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
 
-import '../../app_theme.dart';
+import '../../../app_theme.dart';
 
 class SpaceCard extends StatelessWidget {
   final SpaceCardInfo currentSpace;
