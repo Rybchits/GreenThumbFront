@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/ui_components/title.dart';
 import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:http/http.dart' as http;
 import '../../app_theme.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -52,6 +52,48 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
+  Future<int> attemptSignUp(String name, String email, String password) async {
+    var res = await Session.post(Uri.http(Session.SERVER_IP, '/register'),
+        jsonEncode(<String, String>{'name': name, 'email': email, 'password': password}));
+
+    return res.statusCode;
+  }
+
+  // Обработчик нажатия на кнопку регистрации
+  Future<void> onRegistrationBtnClick() async {
+    String username = _fullNameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String passwordRepeat = _passwordRepeatController.text;
+
+    if (password != passwordRepeat) {
+      log("Password mismatch");
+    } else {
+      var res = await attemptSignUp(username, email, password);
+
+      switch (res) {
+        case 200:
+          log("The user was created. Log in now.");
+          Navigator.popAndPushNamed(context, '/login');
+          break;
+        case 400:
+          log("Request parameters not valid");
+          break;
+        case 460:
+          log("This email already exists");
+          break;
+        default:
+          log("An unknown error occurred. code: $res");
+      }
+    }
+  }
+
+
+  // Обработчик нажатия на ссылку авторизации
+  Future<void> onSignInLinkClick() async {
+    Navigator.pushNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     // Function for create input field
@@ -76,13 +118,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
     }
 
-    Future<int> attemptSignUp(String name, String email, String password) async {
-      var res = await Session.post(Uri.http(Session.SERVER_IP, '/register'),
-          jsonEncode(<String, String>{'name': name, 'email': email, 'password': password}));
-
-      return res.statusCode;
-    }
-
     final registrationButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(4.0),
@@ -90,23 +125,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 10),
-        onPressed: () async {
-          var username = _fullNameController.text;
-          var email = _emailController.text;
-          var password = _passwordController.text;
-
-          var res = await attemptSignUp(username, email, password);
-          if (res == 200) {
-            print("The user was created. Log in now.");
-            Navigator.popAndPushNamed(context, '/login');
-          } else if (res == 400)
-            print("Request parameters not valid");
-          else if (res == 460)
-            print("This email already exists");
-          else {
-            print("An unknown error occurred. code: $res");
-          }
-        },
+        onPressed: onRegistrationBtnClick,
         child:
             const Text("РЕГИСТРАЦИЯ", textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: Colors.white)),
       ),
@@ -115,7 +134,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     final signInLink = InkWell(
       child: Text('Уже есть аккаунт? Войдите в него!',
           style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => {Navigator.pushNamed(context, '/login')},
+      onTap: onSignInLinkClick,
     );
 
     return GestureDetector(
@@ -129,8 +148,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: Center(
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
-
-                  // Todo вынести форму для регистрации в отдельный класс
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
