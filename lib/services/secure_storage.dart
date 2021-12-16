@@ -52,7 +52,6 @@ class Session {
   }
 }
 
-// Todo не имеет смысла хранить данные пользователя. Получить данные пользователя по кукам
 class UserIdentifyingData{
 
   static const String _keyEmail = 'email';

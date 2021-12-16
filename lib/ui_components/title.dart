@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class TitleLogo extends StatelessWidget {
   double _width = 122;
   double _height = 112;
-  var titleStyle = TextStyle();
+  var titleStyle = const TextStyle();
 
   TitleLogo(String size, {Key? key}) : super(key: key) {
     _width = size == "small" ? 75 : 122;

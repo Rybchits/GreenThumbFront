@@ -21,9 +21,10 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordFocusNode = FocusNode();
   bool _passwordVisible = false;
 
+  // Авторизация пользователя данные о котором записаны в секретном хранилище
   Future<void> auth() async {
-    String email = '';
-    String password = '';
+    late String email;
+    late String password;
 
     await Future.wait([
       UserIdentifyingData.getEmail().then((value) => email = value ?? ''),
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     if(res.statusCode == 200){
       print('User authorized');
 
-      await Provider.of<UserStore>(context, listen: false).fetchUser(context, email)
+      await Provider.of<UserStore>(context, listen: false).fetchUser(email)
           .then((_) => Navigator.pushNamed(context, '/spaces'))
           .catchError((e) => print(e));
     }
@@ -45,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       print("not authorized. Code: ${res.statusCode} Headers: ${res.request?.headers}");
     }
   }
+
 
   @override
   void initState() {
@@ -69,16 +71,28 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  // Обработчик нажатия на кнопку авторизации
+  Future<void> onLoginButtonClick() async {
+    var email = _emailController.text;
+    var password = _passwordController.text;
+    await UserIdentifyingData.setUserIdentifyingData(email, password);
+    auth();
+  }
+
+  // Обработчик нажатия на ссылку регистрации
+  Future<void> onSignUpLinkClick() async {
+    Navigator.popAndPushNamed(context, '/registration');
+  }
+
+  // Переключить значение видимости пароля
+  void switchPasswordVisible(){
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    Future<void> onLoginButtonClick() async {
-      var email = _emailController.text;
-      var password = _passwordController.text;
-      await UserIdentifyingData.setUserIdentifyingData(email, password);
-      auth();
-    }
 
     final emailField = TextFormField(
       obscureText: false,
@@ -125,11 +139,7 @@ class _LoginPageState extends State<LoginPage> {
             _passwordVisible ? Icons.visibility : Icons.visibility_off,
             color: const Color.fromRGBO(0, 0, 0, 60),
           ),
-          onPressed: () {
-            setState(() {
-              _passwordVisible = !_passwordVisible;
-            });
-          },
+          onPressed: switchPasswordVisible
         ),
       ),
       controller: _passwordController,
@@ -153,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(
               fontSize: 14, color: Theme.of(context).primaryColorDark)),
-      onTap: () => Navigator.popAndPushNamed(context, '/registration'),
+      onTap: () => onSignUpLinkClick,
     );
 
     return GestureDetector(

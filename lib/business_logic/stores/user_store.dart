@@ -10,7 +10,7 @@ class UserStore extends ChangeNotifier {
 
   get user => _user;
 
-  Future fetchUser(BuildContext context, String email) async{
+  Future fetchUser(String email) async{
 
     Uri urlRequest = Uri.http(Session.SERVER_IP, "/getUser", {'email': email});
     log(urlRequest.toString());
