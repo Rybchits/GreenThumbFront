@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/components/space_filters_component.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/components/space_list_component.dart';
 import 'package:green_thumb_mobile/ui_components/avatar.dart';
 import 'package:green_thumb_mobile/ui_components/title.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
-import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/entities/space_class.dart';
+import 'package:green_thumb_mobile/domain/entities/user_class.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/components/space_edit_page.dart';
-import 'package:green_thumb_mobile/business_logic/stores/user_store.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
@@ -23,22 +23,15 @@ class SpacesListPage extends StatefulWidget {
 
 class _SpacesListPageState extends State<SpacesListPage> {
   late Future<List<SpaceCardInfo>> spaces;
-  final _searchController = TextEditingController();
-  int spacesBelong = 0;
-  bool loading = false;
 
   @override
   void initState() {
-    _searchController.addListener(() {
-      setState(() {});
-    });
     spaces = _fetchSpaces();
     super.initState();
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -127,10 +120,12 @@ class _SpacesListPageState extends State<SpacesListPage> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   List<SpaceCardInfo> searchedSpaces = snapshot.data as List<SpaceCardInfo>;
-                                  searchedSpaces.sort((a, b) => a.name.compareTo(b.name));
 
+                                  /* Todo вынести логику сортировки и фильтрации в репозиторий
+                                  searchedSpaces.sort((a, b) => a.name.compareTo(b.name));
                                   searchedSpaces = searchedSpaces.where((element) =>
                                       element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
+                                   */
 
                                   return searchedSpaces.isEmpty ?
                                     const Center(child: Text("На данный момент пространств нет!"))

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/business_logic/models/plant_class.dart';
-import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
+import 'package:green_thumb_mobile/domain/entities/plant_class.dart';
+import 'package:green_thumb_mobile/domain/entities/user_class.dart';
 
 abstract class Space {
   int _idSpace = 0;
@@ -42,14 +42,14 @@ class SpaceCardInfo extends Space {
 }
 
 
-class SpaceCardContent extends Space {
+class SpaceDetails extends Space {
   TimeOfDay _notificationTime = const TimeOfDay(hour: 8, minute: 0);
   List<Plant> _plants = [];
   List<User> _otherParticipants = [];
   bool _notificationOn = false;
 
 
-  SpaceCardContent.fullConstructor(int id, String name, User creator, String? imageUrl,
+  SpaceDetails.fullConstructor(int id, String name, User creator, String? imageUrl,
       List<String> tags, this._notificationTime, this._plants, this._otherParticipants, this._notificationOn) {
     _idSpace = id;
     _name = name;
@@ -63,7 +63,7 @@ class SpaceCardContent extends Space {
   bool get notificationOn => _notificationOn;
 
 
-  factory SpaceCardContent.fromJson(Map<String, dynamic> json){
+  factory SpaceDetails.fromJson(Map<String, dynamic> json){
 
     List<User> listUsers = (json['users'] as List).map((e) => User.fromJson(e)).toList();
     listUsers.sort((a, b) => a.name!.compareTo(b.name!));
@@ -77,7 +77,7 @@ class SpaceCardContent extends Space {
     List<String> tags = json['tags'].cast<String>();
     String? urlImage = json['imageUrl'];
 
-    return SpaceCardContent.fullConstructor(json['spaceId'], json['name'],
+    return SpaceDetails.fullConstructor(json['spaceId'], json['name'],
         creator,  urlImage, tags, const TimeOfDay(hour: 8, minute: 0),
         listPlants, listUsers, json['notificationEnabled']);
   }

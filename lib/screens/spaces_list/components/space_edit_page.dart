@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/entities/space_class.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
@@ -20,7 +20,7 @@ class SpaceEditPage extends StatefulWidget {
 }
 
 class _SpaceEditPageState extends State<SpaceEditPage> {
-  SpaceCardContent? oldSpace;
+  SpaceDetails? oldSpace;
 
   final _notificationTimeController = TextEditingController();
   final _nameController = TextEditingController();
@@ -80,14 +80,14 @@ class _SpaceEditPageState extends State<SpaceEditPage> {
     }
   }
 
-  Future<SpaceCardContent> _fetchSpaceInfo() async {
+  Future<SpaceDetails> _fetchSpaceInfo() async {
     final response =
         await Session.get(Uri.http(Session.SERVER_IP, '/getSpace', {'spaceId': widget.editingSpaceId.toString()}));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
-      return SpaceCardContent.fromJson(jsonResponse);
+      return SpaceDetails.fromJson(jsonResponse);
     } else {
       throw Exception('Ошибка ${response.statusCode} при получении информации о пространстве');
     }

@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
+import 'package:green_thumb_mobile/domain/entities/plant_class.dart';
+import 'package:green_thumb_mobile/domain/entities/space_class.dart';
 import 'package:green_thumb_mobile/ui_components/avatar.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:green_thumb_mobile/business_logic/models/plant_class.dart';
-import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
 import 'package:green_thumb_mobile/screens/space_details/components/add_participant_dialog.dart';
 import 'package:green_thumb_mobile/screens/space_details/components/plant_edit_page.dart';
 import 'package:green_thumb_mobile/screens/space_details/components/plant_component.dart';
-import 'package:green_thumb_mobile/business_logic/stores/user_store.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
@@ -41,20 +41,20 @@ class _SpacePageState extends State<SpacePage> {
     super.dispose();
   }
 
-  Future<SpaceCardContent> _fetchSpaceInfo() async {
+  Future<SpaceDetails> _fetchSpaceInfo() async {
     int spaceId = startInfo['id'];
     final response = await Session.get(Uri.http(Session.SERVER_IP, '/getSpace', {'spaceId': spaceId.toString()}));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
-      return SpaceCardContent.fromJson(jsonResponse);
+      return SpaceDetails.fromJson(jsonResponse);
     } else {
       throw Exception('Ошибка ${response.statusCode} при получении информации о пространстве');
     }
   }
 
-  void waterSelectedPlants(SpaceCardContent space) async {
+  void waterSelectedPlants(SpaceDetails space) async {
     final response = await Session.post(
         Uri.http(Session.SERVER_IP, '/wateringPlants'), json.encode({'plantsId': _idsSelectedPlants}));
 
@@ -65,7 +65,7 @@ class _SpacePageState extends State<SpacePage> {
     }
   }
 
-  void setNotifications(SpaceCardContent space) async {
+  void setNotifications(SpaceDetails space) async {
     final response = await Session.post(Uri.http(Session.SERVER_IP, '/setNotification',
         {'spaceId': space.id.toString(), 'state': (!space.notificationOn).toString()}), jsonEncode({}));
 
@@ -98,7 +98,7 @@ class _SpacePageState extends State<SpacePage> {
       cursorColor: Theme.of(context).primaryColorDark,
     );
 
-    Material createWaterButton(SpaceCardContent space) {
+    Material createWaterButton(SpaceDetails space) {
       return Material(
           elevation: 4.0,
           borderRadius: BorderRadius.circular(8.0),
@@ -134,7 +134,7 @@ class _SpacePageState extends State<SpacePage> {
               future: _fetchSpaceInfo(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  SpaceCardContent space = snapshot.data as SpaceCardContent;
+                  SpaceDetails space = snapshot.data as SpaceDetails;
 
                   bool isAuthorSpace = space.creator.id == Provider.of<UserStore>(context).user.id;
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/domain/entities/space_class.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:green_thumb_mobile/ui_components/avatar.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
+
 
 import '../../../app_theme.dart';
 

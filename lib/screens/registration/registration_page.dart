@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/ui_components/title.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import '../../app_theme.dart';
 
 class RegistrationPage extends StatefulWidget {

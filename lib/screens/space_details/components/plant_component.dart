@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/business_logic/models/plant_class.dart';
+import 'package:green_thumb_mobile/domain/entities/plant_class.dart';
 import 'package:intl/intl.dart';
 
 class PlantCard extends StatelessWidget {

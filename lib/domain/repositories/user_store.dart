@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:green_thumb_mobile/business_logic/models/user_class.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/entities/user_class.dart';
 
 class UserStore extends ChangeNotifier {
   User? _user;

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
-import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/entities/space_class.dart';
 import 'package:green_thumb_mobile/screens/user_profile/components/invitation_card.dart';
 
 class ListInvitations extends StatefulWidget {
@@ -13,7 +13,7 @@ class ListInvitations extends StatefulWidget {
 }
 
 class _ListInvitationsState extends State<ListInvitations> {
-  late Future<List<SpaceCardContent>> invitationsList;
+  late Future<List<SpaceDetails>> invitationsList;
 
   @override
   void initState() {
@@ -21,14 +21,14 @@ class _ListInvitationsState extends State<ListInvitations> {
     super.initState();
   }
 
-  Future<List<SpaceCardContent>> _fetchInvitations() async {
+  Future<List<SpaceDetails>> _fetchInvitations() async {
     final response =
         await Session.get(Uri.http(Session.SERVER_IP, '/getUserInvites'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       return jsonResponse
-          .map((data) => SpaceCardContent.fromJson(data))
+          .map((data) => SpaceDetails.fromJson(data))
           .toList();
     } else {
       throw Exception(
@@ -42,8 +42,8 @@ class _ListInvitationsState extends State<ListInvitations> {
         future: invitationsList,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<SpaceCardContent> invitations =
-                snapshot.data as List<SpaceCardContent>;
+            List<SpaceDetails> invitations =
+                snapshot.data as List<SpaceDetails>;
 
             return invitations.isEmpty
                 ? const Center(child: Text("Пока приглашений нет!"))

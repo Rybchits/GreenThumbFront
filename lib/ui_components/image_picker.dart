@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageFromGalleryEx extends StatefulWidget {

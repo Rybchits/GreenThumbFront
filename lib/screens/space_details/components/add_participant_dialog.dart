@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/services/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/secure_storage.dart';
 
 Future<void> displayTextInputDialog(BuildContext context, int spaceId) async {
 

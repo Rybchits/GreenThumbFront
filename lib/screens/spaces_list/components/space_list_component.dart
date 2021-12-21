@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:green_thumb_mobile/business_logic/models/space_class.dart';
-import 'package:green_thumb_mobile/screens/spaces_list/components/space_component.dart';
+import 'package:green_thumb_mobile/domain/entities/space_class.dart';
+import 'package:green_thumb_mobile/screens/spaces_list/components/space_card.dart';
 
 class SpaceListComponent extends StatelessWidget{
   final List<SpaceCardInfo> spaces;
