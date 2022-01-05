@@ -54,6 +54,8 @@ dev_dependencies:
   number_inc_dec: ^0.8.0
   flutter_local_notifications: ^9.1.5
   timezone: ^0.8.0
+  dio: ^4.0.4
+  dio_cookie_manager: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
