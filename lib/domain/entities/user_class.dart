@@ -1,18 +1,21 @@
 class User {
-    int _id = 0;
-    String? _name = "";
-    String? _email = "";
-    String? _urlAvatar = "";
+    int id = 0;
+    String name = "";
+    String email = "";
+    String? urlAvatar = "";
 
-    User();
-    User.fullConstructor(this._id, this._name, this._email, this._urlAvatar);
+    User({int? idUser, String? nameUser, String? emailUser, String? urlAvatarUser}){
+        id = idUser ?? 0;
+        name = nameUser ?? "";
+        email = emailUser ?? "";
+        urlAvatar = urlAvatarUser;
+    }
 
-    int get id => _id;
-    String? get name => _name;
-    String? get email => _email;
-    String? get urlAvatar => _urlAvatar;
-
-    factory User.fromJson(Map<String, dynamic> json) {
-        return User.fullConstructor( json['id'], json['name'], json['email'], json['imageUrl'] );
+    factory User.fromApi(Map<String, dynamic> json) {
+        return User(
+            idUser: json['id'],
+            nameUser: json['name'],
+            emailUser: json['email'],
+            urlAvatarUser: json['imageUrl'] );
     }
 }
