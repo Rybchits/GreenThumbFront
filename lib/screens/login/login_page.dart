@@ -1,11 +1,12 @@
-import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
 import 'package:green_thumb_mobile/ui_components/title.dart';
 import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
 import 'package:provider/provider.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,39 +22,15 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordFocusNode = FocusNode();
   bool _passwordVisible = false;
 
-  // Авторизация пользователя данные о котором записаны в секретном хранилище
-  Future<void> auth() async {
-    late String email;
-    late String password;
-
-    await Future.wait([
-      UserIdentifyingData.getEmail().then((value) => email = value ?? ''),
-      UserIdentifyingData.getPassword().then((value) => password = value ?? '')
-    ]);
-
-    var res = await Session.post(Uri.http(Session.SERVER_IP, '/auth'),
-        jsonEncode(<String, String>{'email': email, 'password': password}));
-
-
-    if(res.statusCode == 200){
-      print('User authorized');
-
-      await Provider.of<UserStore>(context, listen: false).fetchUser(email)
-          .then((_) => Navigator.pushNamed(context, '/spaces'))
-          .catchError((e) => print(e));
-    }
-    else {
-      print("not authorized. Code: ${res.statusCode} Headers: ${res.request?.headers}");
-    }
-  }
-
-
   @override
   void initState() {
     super.initState();
     _passwordFocusNode.addListener(_onFocusNodeEvent);
     _emailFocusNode.addListener(_onFocusNodeEvent);
-    auth();
+
+    Provider.of<UserStore>(context, listen: false).fetchUser(null)
+        .then((_) => Navigator.pushNamed(context, '/spaces'))
+        .onError((error, stackTrace) { log(error.toString()); });
   }
 
   @override
@@ -73,10 +50,12 @@ class _LoginPageState extends State<LoginPage> {
 
   // Обработчик нажатия на кнопку авторизации
   Future<void> onLoginButtonClick() async {
-    var email = _emailController.text;
-    var password = _passwordController.text;
-    await UserIdentifyingData.setUserIdentifyingData(email, password);
-    auth();
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    Provider.of<UserStore>(context, listen: false).login(email, password)
+        .then((_) => Navigator.pushNamed(context, '/spaces'))
+        .onError((error, stackTrace) { log(error.toString()); });
   }
 
   // Обработчик нажатия на ссылку регистрации
@@ -85,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Переключить значение видимости пароля
-  void switchPasswordVisible(){
+  void switchPasswordVisible() {
     setState(() {
       _passwordVisible = !_passwordVisible;
     });
@@ -93,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final emailField = TextFormField(
       obscureText: false,
       focusNode: _emailFocusNode,
@@ -104,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
             color: _emailFocusNode.hasFocus
                 ? Theme.of(context).primaryColorDark
                 : const Color.fromRGBO(0, 0, 0, 60)),
+
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4.0),
@@ -123,9 +102,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: InputDecoration(
         labelText: 'Пароль',
         labelStyle: TextStyle(
-            color: _passwordFocusNode.hasFocus
-                ? Theme.of(context).primaryColorDark
-                : const Color.fromRGBO(0, 0, 0, 60)),
+            color: _passwordFocusNode.hasFocus? Theme.of(context).primaryColorDark : const Color.fromRGBO(0, 0, 0, 60)),
         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4.0),
@@ -135,11 +112,11 @@ class _LoginPageState extends State<LoginPage> {
             borderSide: BorderSide(
                 color: Theme.of(context).primaryColorDark, width: 2)),
         suffixIcon: IconButton(
-          icon: Icon(
-            _passwordVisible ? Icons.visibility : Icons.visibility_off,
-            color: const Color.fromRGBO(0, 0, 0, 60),
-          ),
-          onPressed: switchPasswordVisible
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: const Color.fromRGBO(0, 0, 0, 60),
+            ),
+            onPressed: switchPasswordVisible
         ),
       ),
       controller: _passwordController,
@@ -155,14 +132,14 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: onLoginButtonClick,
         child: const Text("ВОЙТИ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.white)),
+            style: TextStyle(fontSize: 16, color: Colors.white)),
       ),
     );
 
     final signUpLink = InkWell(
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(
-              fontSize: 14, color: Theme.of(context).primaryColorDark)),
+              fontSize: 14, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.w600)),
       onTap: () => onSignUpLinkClick,
     );
 
@@ -174,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
               decoration:
-                  const BoxDecoration(gradient: AppTheme.backgroundGradient),
+              const BoxDecoration(image: AppTheme.backgroundImage),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
