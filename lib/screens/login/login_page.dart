@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Обработчик нажатия на ссылку регистрации
-  Future<void> onSignUpLinkClick() async {
+  void onSignUpLinkClick() {
     Navigator.popAndPushNamed(context, '/registration');
   }
 
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Text('Нет аккаунта? Зарегистрируйтесь!',
           style: TextStyle(
               fontSize: 14, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.w600)),
-      onTap: () => onSignUpLinkClick,
+      onTap: onSignUpLinkClick,
     );
 
     return GestureDetector(
