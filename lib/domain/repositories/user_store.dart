@@ -1,33 +1,39 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:green_thumb_mobile/domain/entities/user_class.dart';
+import 'api_repository.dart';
 
 class UserStore extends ChangeNotifier {
-  User? _user;
+  APIRepository? _apiProvider;
 
-  get user => _user;
-
-  Future fetchUser(String email) async{
-
-    Uri urlRequest = Uri.http(Session.SERVER_IP, "/getUser", {'email': email});
-    log(urlRequest.toString());
-    var response = await Session.get(urlRequest);
-
-    if (response.statusCode == 200){
-      User userFromServer = User.fromJson(json.decode(response.body));
-      _user = userFromServer;
-    } else {
-      Future.error ("Что-то пошло не так. Код ошибки: ${response.statusCode}");
-    }
-
-    notifyListeners();
+  set api(APIRepository? apiRepository){
+    _apiProvider = apiRepository;
   }
 
-  void setUser(User? newUser) {
-    _user = newUser;
+  User? _user;
+  get user => _user;
+
+  UserStore({ APIRepository? api }){
+    _apiProvider = api;
+  }
+
+  Future<void> fetchUser(String? email) async{
+    await _apiProvider?.api.getUserRequest(email).then((value) {
+      _user = value;
+      notifyListeners();
+    });
+  }
+
+  Future<void> login(String email, String password) async{
+    await _apiProvider?.api.signInRequest(email, password).then((response) async{
+      log('User authorized');
+      await fetchUser(email);
+    });
+  }
+
+  void logout(){
+    _user = null;
+    _apiProvider?.api.logout();
     notifyListeners();
   }
 }

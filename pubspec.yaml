@@ -71,10 +71,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/BigLogo.png
+    - assets/images/MainLogo.png
     - assets/images/VstuLogo.jpg
     - assets/images/Leafs.jpg
     - assets/images/PlantDefault.png
     - assets/images/BigVstuLogo.jpg
+    - assets/images/Background.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
