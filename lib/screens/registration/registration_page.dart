@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/data/api/web_api/http_api.dart';
 import 'package:green_thumb_mobile/ui_components/title.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import '../../app_theme.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -52,13 +51,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  Future<int> attemptSignUp(String name, String email, String password) async {
-    var res = await Session.post(Uri.http(Session.SERVER_IP, '/register'),
-        jsonEncode(<String, String>{'name': name, 'email': email, 'password': password}));
-
-    return res.statusCode;
-  }
-
   // Обработчик нажатия на кнопку регистрации
   Future<void> onRegistrationBtnClick() async {
     String username = _fullNameController.text;
@@ -69,29 +61,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (password != passwordRepeat) {
       log("Password mismatch");
     } else {
-      var res = await attemptSignUp(username, email, password);
-
-      switch (res) {
-        case 200:
-          log("The user was created. Log in now.");
-          Navigator.popAndPushNamed(context, '/login');
-          break;
-        case 400:
-          log("Request parameters not valid");
-          break;
-        case 460:
-          log("This email already exists");
-          break;
-        default:
-          log("An unknown error occurred. code: $res");
-      }
+      await HttpApi().signUpRequest(username, email, password)
+          .then((value) => Navigator.popAndPushNamed(context, '/login'))
+          .onError((error, stackTrace) { log(stackTrace.toString()); });
     }
   }
 
-
   // Обработчик нажатия на ссылку авторизации
-  Future<void> onSignInLinkClick() async {
-    Navigator.pushNamed(context, '/login');
+  void onSignInLinkClick() {
+    Navigator.popAndPushNamed(context, '/login');
   }
 
   @override
@@ -133,7 +111,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     final signInLink = InkWell(
       child: Text('Уже есть аккаунт? Войдите в него!',
-          style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark)),
+          style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColorDark, fontWeight: FontWeight.w600)),
       onTap: onSignInLinkClick,
     );
 
@@ -144,7 +122,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 0),
-              decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+              decoration: const BoxDecoration(image: AppTheme.backgroundImage),
               child: Center(
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),

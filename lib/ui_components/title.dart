@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class TitleLogo extends StatelessWidget {
   double _width = 122;
@@ -10,7 +11,9 @@ class TitleLogo extends StatelessWidget {
     _height = size == "small" ? 68 : 112;
     titleStyle = TextStyle(
         fontSize: size == "small" ? 26.0 : 38.0, fontFamily: 'Montserrat',
-        color: const Color(0xff000000));
+        color: const Color(0xff000000),
+        fontWeight: FontWeight.w700
+    );
   }
 
   @override
@@ -19,7 +22,7 @@ class TitleLogo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
       Image(
-        image: const AssetImage('assets/images/BigLogo.png'),
+        image: const AssetImage('assets/images/MainLogo.png'),
         width: _width,
         height: _height,
       ),

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/app_theme.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageFromGalleryEx extends StatefulWidget {
@@ -44,8 +43,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                     BoxDecoration(borderRadius: BorderRadius.circular(5)),
                 child: FadeInImage.assetNetwork(
                   placeholder: "assets/images/VstuLogo.jpg",
-                  image: Uri.http(Session.SERVER_IP, widget.initialImageUrl!)
-                      .toString(),
+                  image: widget.initialImageUrl == null? "" : widget.initialImageUrl!,
                   imageErrorBuilder: (context, error, stackTrace) =>
                       Image.asset("assets/images/VstuLogo.jpg"),
                 ))

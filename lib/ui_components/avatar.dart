@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/domain/entities/user_class.dart';
 
 class UserAvatar extends StatelessWidget {
-  double _radius = 219;
-  late User _user;
+  late final double _radius;
+  final User _user;
 
-  UserAvatar(User currentUser, String size, {Key? key}) : super(key: key) {
-    _user = currentUser;
-
+  UserAvatar(this._user, String size, {Key? key}) : super(key: key) {
     switch (size) {
       case 'small':
         _radius = 28;
@@ -26,7 +24,7 @@ class UserAvatar extends StatelessWidget {
 
     return CircleAvatar(
       radius: _radius,
-      child: _user.urlAvatar == null ? Text(_user.name!.toUpperCase()[0],
+      child: _user.urlAvatar == null ? Text(_user.name.toUpperCase()[0],
               style: TextStyle(color: Colors.white, fontSize: _radius/1.5)) : null,
       backgroundImage: _user.urlAvatar == null ? null : NetworkImage(_user.urlAvatar!),
       backgroundColor: Theme.of(context).primaryColorLight,

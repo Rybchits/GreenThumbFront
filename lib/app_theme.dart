@@ -16,6 +16,11 @@ class AppTheme {
     ],
   );
 
+  static const backgroundImage = DecorationImage(
+    image: AssetImage('assets/images/Background.jpg'),
+    fit: BoxFit.cover
+  );
+
   static final lightTheme = ThemeData(
       primaryColor: const Color(0xff43B05C),
       primaryColorLight: const Color(0xff49B889),

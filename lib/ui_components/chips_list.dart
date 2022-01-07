@@ -7,7 +7,7 @@ class ChipsList extends StatelessWidget {
   final List<String> stringList;
   const ChipsList({Key? key, required this.stringList}) : super(key: key);
 
-  Widget buildChip(String label) {
+  static Widget buildChip(String label) {
     return Chip(
       labelPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       label: Text( label,
