@@ -1,19 +1,18 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:green_thumb_mobile/domain/repositories/spaces_store.dart';
 
 Future<void> displayTextInputDialog(BuildContext context, int spaceId) async {
-
   var _textFieldController = TextEditingController();
 
-  Future<int> _requestForInviteUser(String email, int spaceId) async{
+  Future<void> _pressOnInviteButton() async{
 
-    final response = await Session.post(Uri.http(Session.SERVER_IP, '/inviteInSpaceByEmail'),
-        json.encode({'spaceId': spaceId, 'email': email}));
-
-    return response.statusCode;
+    Provider.of<SpacesStore>(context, listen: false).inviteUserInSpace(spaceId, _textFieldController.text)
+        .then((value) { Navigator.pop(context); })
+        .onError((error, stackTrace) { log(error as String); });
   }
 
   return showDialog(
@@ -33,16 +32,9 @@ Future<void> displayTextInputDialog(BuildContext context, int spaceId) async {
                 Navigator.pop(context);
               },
             ),
-            TextButton(
+            TextButton (
               child: const Text('Добавить', style: TextStyle(color: Colors.green),),
-              onPressed: () {
-                _requestForInviteUser(_textFieldController.text, spaceId)
-                    .then((value){
-                      if (value == 200) {
-                        Navigator.pop(context);
-                      }
-                });
-              },
+              onPressed: _pressOnInviteButton
             ),
           ],
         );

@@ -5,7 +5,6 @@ import 'image_request_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class PlantRequestModel {
-
   int? spaceId;
   int? plantId;
   String? name;

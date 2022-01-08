@@ -10,7 +10,7 @@ class SpaceRequestModel {
   String? tagsLabel;
 
   SpaceRequestModel({required this.name, this.imageAvatar, TimeOfDay? notificationTimeOfDay, List<String>? tags}){
-    tagsLabel = tags == null? '' : tags.join(',');
+    tagsLabel = tags == null || tags.isEmpty? null : tags.join(',');
 
     final now = DateTime.now();
     notificationTime = DateTime(now.year, now.month, now.day,

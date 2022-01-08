@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:green_thumb_mobile/domain/entities/space_class.dart';
+import 'package:green_thumb_mobile/domain/view_models/space_card_info.dart';
 import 'package:green_thumb_mobile/screens/spaces_list/components/space_card.dart';
 
 class SpaceListComponent extends StatelessWidget{
@@ -13,6 +13,7 @@ class SpaceListComponent extends StatelessWidget{
   Widget build(BuildContext context) {
     return ListView.builder(
         shrinkWrap: true,
+        primary: false,
         padding: const EdgeInsets.symmetric(vertical: 20),
         itemCount: spaces.length,
         itemBuilder: (BuildContext context, int index) {

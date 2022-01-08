@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:green_thumb_mobile/domain/repositories/spaces_store.dart';
 import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
 import 'package:green_thumb_mobile/domain/entities/plant_class.dart';
 import 'package:green_thumb_mobile/domain/entities/space_class.dart';
@@ -10,30 +9,35 @@ import 'package:green_thumb_mobile/ui_components/avatar.dart';
 import 'package:green_thumb_mobile/screens/space_details/components/add_participant_dialog.dart';
 import 'package:green_thumb_mobile/screens/space_details/components/plant_edit_page.dart';
 import 'package:green_thumb_mobile/screens/space_details/components/plant_component.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
+import 'package:green_thumb_mobile/domain/view_models/space_page_argument.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
 
 class SpacePage extends StatefulWidget {
-  const SpacePage({Key? key}) : super(key: key);
+  final SpacePageArgument? argument;
+
+  const SpacePage({Key? key, this.argument}) : super(key: key);
 
   @override
   _SpacePageState createState() => _SpacePageState();
 }
 
 class _SpacePageState extends State<SpacePage> {
-  late Map startInfo;
+  Future<SpaceDetails?>? getSpaceFuture;
   final _searchController = TextEditingController();
-  List<int> _idsSelectedPlants = [];
+  final List<int> _idsSelectedPlants = [];
 
   @override
   void initState() {
     _searchController.addListener(() {
       setState(() {});
     });
+
+    getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(widget.argument?.idSpace ?? 0);
     super.initState();
   }
+
 
   @override
   void dispose() {
@@ -41,42 +45,23 @@ class _SpacePageState extends State<SpacePage> {
     super.dispose();
   }
 
-  Future<SpaceDetails> _fetchSpaceInfo() async {
-    int spaceId = startInfo['id'];
-    final response = await Session.get(Uri.http(Session.SERVER_IP, '/getSpace', {'spaceId': spaceId.toString()}));
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-
-      return SpaceDetails.fromJson(jsonResponse);
-    } else {
-      throw Exception('Ошибка ${response.statusCode} при получении информации о пространстве');
-    }
-  }
 
   void waterSelectedPlants(SpaceDetails space) async {
-    final response = await Session.post(
-        Uri.http(Session.SERVER_IP, '/wateringPlants'), json.encode({'plantsId': _idsSelectedPlants}));
-
-    if (response.statusCode == 200) {
-      setState(() {
-        _idsSelectedPlants.clear();
-      });
-    }
+    Provider.of<SpacesStore>(context, listen: false).wateringPlantsInSpace(space.id, _idsSelectedPlants)
+        .then((value) {
+          _idsSelectedPlants.clear();
+          getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(space.id);
+    });
   }
 
-  void setNotifications(SpaceDetails space) async {
-    final response = await Session.post(Uri.http(Session.SERVER_IP, '/setNotification',
-        {'spaceId': space.id.toString(), 'state': (!space.notificationOn).toString()}), jsonEncode({}));
 
-    if (response.statusCode == 200){
-      setState(() { });
-    }
+  void setNotifications(SpaceDetails space) async {
+    Provider.of<SpacesStore>(context, listen: false).setSpaceNotification(space.id, !space.notificationOn)
+        .then((value) { getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(space.id); });
   }
 
   @override
   Widget build(BuildContext context) {
-    startInfo = ModalRoute.of(context)!.settings.arguments as Map;
 
     final searchField = TextFormField(
       controller: _searchController,
@@ -120,7 +105,8 @@ class _SpacePageState extends State<SpacePage> {
             elevation: 1,
             actions: <Widget>[
               Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Text(startInfo['name'], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                Text(widget.argument?.nameSpace ?? '',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
                 const SizedBox(width: 2),
                 IconButton(
                   onPressed: () {},
@@ -131,11 +117,10 @@ class _SpacePageState extends State<SpacePage> {
             ],
           ),
           body: FutureBuilder(
-              future: _fetchSpaceInfo(),
+              future: getSpaceFuture,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   SpaceDetails space = snapshot.data as SpaceDetails;
-
                   bool isAuthorSpace = space.creator.id == Provider.of<UserStore>(context).user.id;
 
                   List<Plant> searchedPlants = space.plants
@@ -156,9 +141,7 @@ class _SpacePageState extends State<SpacePage> {
                                 children: <Widget>[
                                   FadeInImage.assetNetwork(
                                     placeholder: "assets/images/BigVstuLogo.jpg",
-                                    image: space.imageUrl == null
-                                        ? ""
-                                        : Uri.http(Session.SERVER_IP, space.imageUrl!).toString(),
+                                    image: space.imageUrl == null? "" : space.imageUrl!,
                                     imageErrorBuilder: (context, error, stackTrace) =>
                                         Image.asset("assets/images/BigVstuLogo.jpg"),
                                   ),
@@ -249,7 +232,7 @@ class _SpacePageState extends State<SpacePage> {
                                                           isScrollControlled: true,
                                                           context: context,
                                                           builder: (_) => PlantAddPage(
-                                                              spaceId: startInfo['id'],
+                                                              spaceId: widget.argument?.idSpace ?? 0,
                                                               editingPlant: searchedPlants[index]));
                                                     },
                                                     child: PlantCard(
@@ -276,7 +259,9 @@ class _SpacePageState extends State<SpacePage> {
               child: const Icon(Icons.add),
               onPressed: () {
                 showModalBottomSheet(
-                    isScrollControlled: true, context: context, builder: (_) => PlantAddPage(spaceId: startInfo['id']));
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (_) => PlantAddPage(spaceId: widget.argument?.idSpace ?? 0));
               },
             ),
           ),

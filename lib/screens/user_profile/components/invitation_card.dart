@@ -1,54 +1,49 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:green_thumb_mobile/domain/entities/space_class.dart';
+import 'package:green_thumb_mobile/domain/repositories/spaces_store.dart';
+import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
+import 'package:provider/provider.dart';
 
 class InvitationCard extends StatelessWidget {
   final SpaceDetails invitedSpace;
   final void Function(int index) removeInvitation;
 
-  const InvitationCard({Key? key, required this.invitedSpace,
-    required this.removeInvitation}) : super(key: key);
-
-  Future<void> _rejectInvitation() async {
-
-    final response = await Session.post(Uri.http(Session.SERVER_IP, '/rejectInviteToSpace',
-        {'spaceId': invitedSpace.id.toString()}), jsonEncode({}));
-
-    if (response.statusCode == 200) {
-      removeInvitation(invitedSpace.id);
-    }
-  }
-
-  Future<void> _acceptInvitation() async {
-
-    final response = await Session.post(Uri.http(Session.SERVER_IP, '/acceptInviteToSpace',
-        {'spaceId': invitedSpace.id.toString()}), jsonEncode({}));
-
-    if (response.statusCode == 200) {
-      removeInvitation(invitedSpace.id);
-    }
-  }
+  const InvitationCard({Key? key, required this.invitedSpace, required this.removeInvitation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    Future<void> _rejectInvitation() async {
+      Provider.of<UserStore>(context, listen: false).rejectInviteToSpace(invitedSpace.id)
+          .then((value) {
+            removeInvitation(invitedSpace.id);
+            Provider.of<SpacesStore>(context, listen: false).fetchSpaces();})
+          .onError((error, stackTrace) {
+            log(error.toString());
+          });
+    }
+
+    Future<void> _acceptInvitation() async {
+      Provider.of<UserStore>(context, listen: false).acceptInviteToSpace(invitedSpace.id)
+          .then((value) => removeInvitation(invitedSpace.id))
+          .onError((error, stackTrace) {
+        log(error.toString());
+      });
+    }
+
     return Card(
-      elevation: 1,
+        elevation: 1,
         child: ListTile(
-            title: Text(invitedSpace.name,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+            title: Text(invitedSpace.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
             subtitle: Text('Приглашение от ${invitedSpace.creator.name}'),
-          trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                IconButton(
-                    onPressed: _rejectInvitation,
-                    icon: const Icon(Icons.cancel_outlined, color: Colors.red, size: 35)),
-                IconButton(onPressed: _acceptInvitation,
-                    icon: const Icon(Icons.check_circle_outline, color: Colors.green, size: 35))
-            ])
-        )
-    );
+            trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+              IconButton(
+                  onPressed: _rejectInvitation, icon: const Icon(Icons.cancel_outlined, color: Colors.red, size: 35)),
+              IconButton(
+                  onPressed: _acceptInvitation,
+                  icon: const Icon(Icons.check_circle_outline, color: Colors.green, size: 35))
+            ])));
   }
 }

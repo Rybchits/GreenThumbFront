@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:green_thumb_mobile/data/api/web_api/http_api.dart';
+import 'package:provider/provider.dart';
+import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
 import 'package:green_thumb_mobile/ui_components/title.dart';
 import '../../app_theme.dart';
 
@@ -58,10 +59,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String password = _passwordController.text;
     String passwordRepeat = _passwordRepeatController.text;
 
+    // Todo snacks
     if (password != passwordRepeat) {
       log("Password mismatch");
     } else {
-      await HttpApi().signUpRequest(username, email, password)
+      Provider.of<UserStore>(context, listen: false).registration(username, email, password)
           .then((value) => Navigator.popAndPushNamed(context, '/login'))
           .onError((error, stackTrace) { log(stackTrace.toString()); });
     }

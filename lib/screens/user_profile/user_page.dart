@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:green_thumb_mobile/ui_components/avatar.dart';
-import 'package:green_thumb_mobile/domain/secure_storage.dart';
 import 'package:green_thumb_mobile/domain/entities/user_class.dart';
 import 'package:green_thumb_mobile/screens/user_profile/components/list_invitations.dart';
 import 'package:green_thumb_mobile/domain/repositories/user_store.dart';
@@ -17,14 +16,11 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     void onLogoutButtonClick(){
-      Session.removeCookie();
-      UserIdentifyingData.removeLastUser();
-      Provider.of<UserStore>(context, listen: false).setUser(null);
-      Navigator.pushNamedAndRemoveUntil(context, '/login',
-              (Route<dynamic> route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+      Provider.of<UserStore>(context, listen: false).logout();
     }
 
-    final User currentUser = Provider.of<UserStore>(context).user ?? User();
+    final User currentUser = Provider.of<UserStore>(context).user ?? User(nameUser: ' ');
 
     final emailForm = TextFormField(
       enabled: false,
@@ -74,7 +70,7 @@ class UserPage extends StatelessWidget {
                   flex: 8,
                   ),
                   Expanded(
-                    child: Text(currentUser.name ?? '',
+                    child: Text(currentUser.name,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 22)),
