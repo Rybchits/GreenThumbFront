@@ -13,26 +13,27 @@ class SpaceCard extends StatelessWidget {
     return SizedBox(
         height: 135,
         child: Card(
-            shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
             elevation: 4,
             margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: <Widget>[
-                const Expanded(child: SizedBox(), flex: 1),
                 Expanded(
                     child: Padding(
-                        padding: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                  Text(
-                                      currentSpace.name.length < 18
-                                          ? currentSpace.name
-                                          : currentSpace.name.substring(0, 15) + '...',
-                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                                  Flexible(
+                                    child: Text(currentSpace.name,
+                                          overflow: TextOverflow.fade,
+                                          softWrap: false,
+                                          maxLines: 1,
+                                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                                  ),
                                   const SizedBox(width: 10),
                                   SizedBox(
                                     child: UserAvatar(currentSpace.creator, 'small'),
@@ -64,11 +65,11 @@ class SpaceCard extends StatelessWidget {
                                           )
                                         ]))
                             ])),
-                    flex: 14),
+                    flex: 8),
                 Expanded(
                   child: Container(
-                      padding: const EdgeInsets.all(2),
-                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(right: 10),
+                      alignment: Alignment.centerRight,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: FadeInImage.assetNetwork(
@@ -77,9 +78,8 @@ class SpaceCard extends StatelessWidget {
                             imageErrorBuilder: (context, error, stackTrace) =>
                                 Image.asset("assets/images/VstuLogo.jpg"),
                           ))),
-                  flex: 8,
+                  flex: 5,
                 ),
-                const Expanded(child: SizedBox(), flex: 1),
               ],
             )));
   }

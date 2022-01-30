@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:green_thumb_mobile/data/api/abstract_api.dart';
 import 'package:green_thumb_mobile/data/dto_models/plant_request_model.dart';
 import 'package:green_thumb_mobile/data/dto_models/space_model.dart';
@@ -39,13 +42,21 @@ class LocalApi implements Api{
   }
 
   @override
-  Future<List<SpaceModel>> getSpaceListRequest(String filters) {
-    throw UnimplementedError();
+  Future<List<SpaceModel>> getSpaceListRequest(String filters) async{
+    final String response = await rootBundle.loadString('assets/mock/spaces.json');
+    final List<SpaceModel> data = (await json.decode(response) as List<dynamic>)
+        .map((e) => SpaceModel.fromApi(e)).toList();
+
+    return data;
   }
 
   @override
-  Future<SpaceModel> getSpaceRequest(int spaceId) {
-    throw UnimplementedError();
+  Future<SpaceModel> getSpaceRequest(int spaceId) async{
+    final String response = await rootBundle.loadString('assets/mock/spaces.json');
+    final List<SpaceModel> data = (await json.decode(response) as List<dynamic>)
+        .map((e) => SpaceModel.fromApi(e)).toList();
+
+    return data.firstWhere((element) => element.idSpace == spaceId);
   }
 
   @override
@@ -54,8 +65,10 @@ class LocalApi implements Api{
   }
 
   @override
-  Future<User> getUserRequest(String? email) {
-    throw UnimplementedError();
+  Future<User> getUserRequest(String? email) async{
+    final String response = await rootBundle.loadString('assets/mock/users.json');
+    final List<User> data = (await json.decode(response) as List<dynamic>).map((e) => User.fromApi(e)).toList();
+    return data.firstWhere((element) => element.email == email);
   }
 
   @override
@@ -78,8 +91,10 @@ class LocalApi implements Api{
   }
 
   @override
-  Future<void> signInRequest(String email, String password) {
-    throw UnimplementedError();
+  Future<void> signInRequest(String email, String password) async{
+    final String response = await rootBundle.loadString('assets/mock/users.json');
+    final List<User> data = (await json.decode(response) as List<dynamic>).map((e) => User.fromApi(e)).toList();
+    data.firstWhere((element) => element.email == email, orElse: () => throw('Неверный логин или пароль'));
   }
 
   @override

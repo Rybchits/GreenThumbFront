@@ -1,0 +1,29 @@
+[
+  {
+  "id": 1,
+  "name": "Анна Кузнецова",
+  "email": "19106239vstu@mail.ru",
+  "imageUrl": "https://sun9-48.userapi.com/impg/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"
+  },
+
+  {
+    "id": 2,
+    "name": "Морат Борат",
+    "email": "19106240vstu@mail.ru",
+    "imageUrl": "https://sun9-36.userapi.com/impg/xs1fBB0L_nss8vNcae5L62xU6E9xXfuVLMbgtQ/p_ayK7vx1KI.jpg?size=960x1011&quality=96&sign=8c0995d34dcd3803065e9738f2e17d5e&type=album"
+  },
+
+  {
+    "id": 3,
+    "name": "Sanya Banya",
+    "email": "sanya_2010@mail.ru",
+    "imageUrl": "https://sun9-14.userapi.com/impg/5_tq8kBnnhpUdUVf-ieB0Db9sDpMLYSi9dQ5iQ/ZghyCtfRWOw.jpg?size=1736x2160&quality=96&sign=695026f19daf1a3060b9b2be13510cee&type=album"
+  },
+
+  {
+    "id": 4,
+    "name": "Test Mock User",
+    "email": "test",
+    "imageUrl": "https://images.genius.com/d4cfbd73da00c76e7dbf5ebabee1e2fd.1000x1000x1.jpg"
+  }
+]

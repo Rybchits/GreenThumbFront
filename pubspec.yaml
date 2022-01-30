@@ -77,6 +77,8 @@ flutter:
     - assets/images/PlantDefault.png
     - assets/images/BigVstuLogo.jpg
     - assets/images/Background.jpg
+    - assets/mock/users.json
+    - assets/mock/spaces.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

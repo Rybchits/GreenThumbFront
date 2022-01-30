@@ -104,16 +104,20 @@ class _SpacePageState extends State<SpacePage> {
             backgroundColor: const Color.fromRGBO(115, 115, 115, 0.4),
             elevation: 1,
             actions: <Widget>[
-              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Text(widget.argument?.nameSpace ?? '',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-                const SizedBox(width: 2),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.more_vert),
-                ),
-                const SizedBox(width: 3),
-              ])
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(widget.argument?.nameSpace ?? '',
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                    const SizedBox(width: 2),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.more_vert),
+                    ),
+                    const SizedBox(width: 3),
+                  ])
             ],
           ),
           body: FutureBuilder(

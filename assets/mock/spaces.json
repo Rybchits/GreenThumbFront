@@ -1,0 +1,39 @@
+[
+  {
+    "spaceId": 1,
+    "creatorId": 4,
+    "name": "First Space",
+    "imageUrl": "http://remdominfo.ru/upload/vk/img/17371_W6zegQORqL4.jpg",
+    "tags": [ "tags", "test"],
+    "users": [
+      {
+        "id": 4,
+        "name": "Test Mock User",
+        "email": "test",
+        "imageUrl": "https://images.genius.com/d4cfbd73da00c76e7dbf5ebabee1e2fd.1000x1000x1.jpg"
+      }
+    ],
+    "notificationEnabled": true,
+    "notificationTime": "2000-01-23T01:23:45.000+00:00",
+    "plants": []
+  },
+
+  {
+    "spaceId": 2,
+    "creatorId": 4,
+    "name": "Второе пространствоооооооооо",
+    "imageUrl": "https://cdn.the-village.ru/the-village.ru/post_image-image/AfqwJQzmz4CESoDeADbP6w.jpg",
+    "tags": ["test"],
+    "users": [
+      {
+        "id": 4,
+        "name": "Test Mock User",
+        "email": "test",
+        "imageUrl": "https://images.genius.com/d4cfbd73da00c76e7dbf5ebabee1e2fd.1000x1000x1.jpg"
+      }
+    ],
+    "notificationEnabled": true,
+    "notificationTime": "2000-01-23T01:23:45.000+00:00",
+    "plants": []
+  }
+]
