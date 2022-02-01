@@ -11,7 +11,7 @@ class SpaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 135,
+        height: MediaQuery.of(context).size.height * 0.19,
         child: Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
             elevation: 4,

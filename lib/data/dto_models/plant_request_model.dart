@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:green_thumb_mobile/domain/entities/plant_class.dart';
 import 'image_request_model.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class PlantRequestModel {
   int? spaceId;
@@ -45,7 +44,7 @@ extension PlantMapper on PlantRequestModel {
 
     // Todo control timezone
     // Calculate the next watering date (period addition and time zone offset)
-    DateTime tempDate = wateringDate ?? wateringDate!.add(Duration(hours: 3, days: wateringPeriodDays ?? 0));
+    DateTime tempDate = wateringDate?.add(Duration(days: wateringPeriodDays ?? 0)) ?? DateTime.now();
 
     return Plant(
         id: plantId,

@@ -60,15 +60,19 @@ class LocalApi implements Api{
   }
 
   @override
-  Future<List<SpaceModel>> getUserInvitesRequest() {
-    throw UnimplementedError();
+  Future<List<SpaceModel>> getUserInvitesRequest() async{
+    final String response = await rootBundle.loadString('assets/mock/spaces.json');
+    final List<SpaceModel> data = (await json.decode(response) as List<dynamic>)
+        .map((e) => SpaceModel.fromApi(e)).toList();
+
+    return data;
   }
 
   @override
   Future<User> getUserRequest(String? email) async{
     final String response = await rootBundle.loadString('assets/mock/users.json');
     final List<User> data = (await json.decode(response) as List<dynamic>).map((e) => User.fromApi(e)).toList();
-    return data.firstWhere((element) => element.email == email);
+    return data.firstWhere((element) => element.email == email, orElse: () => throw('Неверный логин'));
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_thumb_mobile/app_theme.dart';
 
 class SpaceFiltersComponent extends StatefulWidget {
   final void Function(String searchString, bool spacesBelong) refreshListByFilters;
@@ -41,7 +42,12 @@ class _SpaceFiltersState extends State<SpaceFiltersComponent>{
 
     final comboboxSpacesBelong = InputDecorator(
       decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+        fillColor: Colors.grey.shade300,
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white, width: 0.0),
+          borderRadius: BorderRadius.circular(15.0)
+        ),
         contentPadding: const EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
       ),
       child: DropdownButtonHideUnderline(
@@ -49,6 +55,7 @@ class _SpaceFiltersState extends State<SpaceFiltersComponent>{
           value: onlyOwnSpace,
           isDense: true,
           isExpanded: true,
+          style: const TextStyle(color: Colors.black),
           items: const [
             DropdownMenuItem(child: Text("Все"), value: false),
             DropdownMenuItem(child: Text("Личные"), value: true),

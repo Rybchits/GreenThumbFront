@@ -10,26 +10,77 @@
         "id": 4,
         "name": "Test Mock User",
         "email": "test",
-        "imageUrl": "https://images.genius.com/d4cfbd73da00c76e7dbf5ebabee1e2fd.1000x1000x1.jpg"
+        "imageUrl": "https://www.bigcitystar.ru/wp-content/uploads/2021/02/7Dora2-300x300.jpg"
+      }
+    ],
+    "notificationEnabled": true,
+    "notificationTime": "2000-01-23T01:23:45.000+00:00",
+    "plants": [
+      {
+        "spaceId": 1,
+        "plantId": 1,
+        "wateringPeriodDays": 2,
+        "wateringDate": "2022-01-25T01:23:45.000+00:00",
+        "plantName": "Фиалка",
+        "imageUrl": "https://fialka65.ucoz.ru/14/katalog-4023_1728.jpg",
+        "group": "Фиалки обыкновенные"
+      },
+      {
+        "spaceId": 1,
+        "plantId": 2,
+        "wateringPeriodDays": 3,
+        "wateringDate": "2022-01-24T01:23:45.000+00:00",
+        "plantName": "Cactus",
+        "imageUrl": "https://www.fireflyforest.com/images/wildflowers/plants/Carnegiea-gigantea-1.jpg",
+        "group": "Cacti"
+      },
+      {
+        "spaceId": 1,
+        "plantId": 3,
+        "wateringPeriodDays": 5,
+        "wateringDate": "2022-01-28T01:23:45.000+00:00",
+        "plantName": "Money Plant",
+        "imageUrl": "https://flowersadvice.ru/wp-content/uploads/2018/02/tolstyanka-1.jpg",
+        "group": "$$$"
+      }
+    ]
+  },
+  {
+    "spaceId": 2,
+    "creatorId": 4,
+    "name": "Второе пространствоооооооооо",
+    "imageUrl": "https://cdn.the-village.ru/the-village.ru/post_image-image/AfqwJQzmz4CESoDeADbP6w.jpg",
+    "tags": ["Дом", "House"],
+    "users": [
+      {
+        "id": 4,
+        "name": "Test Mock User",
+        "email": "test",
+        "imageUrl": "https://www.bigcitystar.ru/wp-content/uploads/2021/02/7Dora2-300x300.jpg"
       }
     ],
     "notificationEnabled": true,
     "notificationTime": "2000-01-23T01:23:45.000+00:00",
     "plants": []
   },
-
   {
-    "spaceId": 2,
-    "creatorId": 4,
-    "name": "Второе пространствоооооооооо",
-    "imageUrl": "https://cdn.the-village.ru/the-village.ru/post_image-image/AfqwJQzmz4CESoDeADbP6w.jpg",
-    "tags": ["test"],
+    "spaceId": 3,
+    "creatorId": 1,
+    "name": "Третье",
+    "imageUrl": "https://www.ivd.ru/images/cache/2019/3/29/fit_930_519_false_crop_1200_675_0_112_q90_732011_4bf2d3da15.jpeg",
+    "tags": [],
     "users": [
+      {
+        "id": 1,
+        "name": "Анна Кузнецова",
+        "email": "19106239vstu@mail.ru",
+        "imageUrl": "https://sun9-48.userapi.com/impg/fmm-Q1ZA22IAdubGy31cFfz3h0CNwq1CP0Gs5w/v5DFeC3CLms.jpg?size=1619x2021&quality=96&sign=3a0a859c5727c9517cc8186d3266b822&type=album"
+      },
       {
         "id": 4,
         "name": "Test Mock User",
         "email": "test",
-        "imageUrl": "https://images.genius.com/d4cfbd73da00c76e7dbf5ebabee1e2fd.1000x1000x1.jpg"
+        "imageUrl": "https://www.bigcitystar.ru/wp-content/uploads/2021/02/7Dora2-300x300.jpg"
       }
     ],
     "notificationEnabled": true,

@@ -38,31 +38,29 @@ class _SpacePageState extends State<SpacePage> {
     super.initState();
   }
 
-
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
 
-
   void waterSelectedPlants(SpaceDetails space) async {
-    Provider.of<SpacesStore>(context, listen: false).wateringPlantsInSpace(space.id, _idsSelectedPlants)
-        .then((value) {
-          _idsSelectedPlants.clear();
-          getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(space.id);
+    Provider.of<SpacesStore>(context, listen: false).wateringPlantsInSpace(space.id, _idsSelectedPlants).then((value) {
+      _idsSelectedPlants.clear();
+      getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(space.id);
     });
   }
 
-
   void setNotifications(SpaceDetails space) async {
-    Provider.of<SpacesStore>(context, listen: false).setSpaceNotification(space.id, !space.notificationOn)
-        .then((value) { getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(space.id); });
+    Provider.of<SpacesStore>(context, listen: false)
+        .setSpaceNotification(space.id, !space.notificationOn)
+        .then((value) {
+      getSpaceFuture = Provider.of<SpacesStore>(context, listen: false).getSpaceFromApi(space.id);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     final searchField = TextFormField(
       controller: _searchController,
       decoration: const InputDecoration(
@@ -101,25 +99,20 @@ class _SpacePageState extends State<SpacePage> {
           extendBodyBehindAppBar: true,
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            backgroundColor: const Color.fromRGBO(115, 115, 115, 0.4),
-            elevation: 1,
-            actions: <Widget>[
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(widget.argument?.nameSpace ?? '',
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-                    const SizedBox(width: 2),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.more_vert),
-                    ),
-                    const SizedBox(width: 3),
-                  ])
-            ],
-          ),
+              backgroundColor: const Color.fromRGBO(115, 115, 115, 0.4),
+              elevation: 1,
+              centerTitle: true,
+              title: Text(widget.argument?.nameSpace ?? '',
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.more_vert),
+                ),
+                const SizedBox(width: 3),
+              ]),
           body: FutureBuilder(
               future: getSpaceFuture,
               builder: (context, snapshot) {
@@ -128,8 +121,7 @@ class _SpacePageState extends State<SpacePage> {
                   bool isAuthorSpace = space.creator.id == Provider.of<UserStore>(context).user.id;
 
                   List<Plant> searchedPlants = space.plants
-                      .where((element) => element.name.toLowerCase().contains(_searchController.text.toLowerCase()))
-                      .toList();
+                      .where((element) => element.name.toLowerCase().contains(_searchController.text.toLowerCase())).toList();
 
                   return RefreshIndicator(
                       onRefresh: () async {
@@ -138,14 +130,14 @@ class _SpacePageState extends State<SpacePage> {
                       child: SingleChildScrollView(
                           physics: const AlwaysScrollableScrollPhysics(),
                           child: Container(
-                            decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
+                            decoration: const BoxDecoration(image: AppTheme.backgroundImage),
                             child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                   FadeInImage.assetNetwork(
                                     placeholder: "assets/images/BigVstuLogo.jpg",
-                                    image: space.imageUrl == null? "" : space.imageUrl!,
+                                    image: space.imageUrl == null ? "" : space.imageUrl!,
                                     imageErrorBuilder: (context, error, stackTrace) =>
                                         Image.asset("assets/images/BigVstuLogo.jpg"),
                                   ),
@@ -197,7 +189,9 @@ class _SpacePageState extends State<SpacePage> {
                                                   ? Icons.notifications_active_sharp
                                                   : Icons.notifications_none,
                                               size: 35),
-                                          onPressed: () { setNotifications(space); })
+                                          onPressed: () {
+                                            setNotifications(space);
+                                          })
                                     ]),
                                     flex: 1,
                                   ),

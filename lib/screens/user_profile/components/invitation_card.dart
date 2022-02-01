@@ -36,7 +36,13 @@ class InvitationCard extends StatelessWidget {
     return Card(
         elevation: 1,
         child: ListTile(
-            title: Text(invitedSpace.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+            title: Text(
+              invitedSpace.name,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              softWrap: true,
+            ),
             subtitle: Text('Приглашение от ${invitedSpace.creator.name}'),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
               IconButton(
